@@ -17,19 +17,8 @@ const Pricing = () => {
         { name: "Controle de medicamentos", included: true },
         { name: "Histórico médico simples (consultas e exames)", included: true },
         { name: "Perfil básico do idoso e do cuidador", included: true },
-        { name: "Acesso a artigos e dicas sobre cuidados", included: true },
         { name: "Interface acessível com alto contraste", included: true },
-        { name: "Suporte por email", included: true },
         { name: "Histórico de 30 dias", included: true },
-        { name: "Botão de emergência", included: false },
-        { name: "Alertas de saúde inteligentes", included: false },
-        { name: "Monitoramento comportamental", included: false },
-        { name: "Atividades personalizadas", included: false },
-        { name: "Telemedicina integrada", included: false },
-        { name: "Relatórios médicos em PDF", included: false },
-        { name: "Atendimento preferencial", included: false },
-        { name: "Histórico ilimitado", included: false },
-        { name: "Múltiplos perfis de idosos", included: false },
       ],
     },
     {
@@ -38,17 +27,9 @@ const Pricing = () => {
       popular: true,
       badge: "Mais Popular",
       description: "Cuidado completo com monitoramento avançado e suporte prioritário.",
-      features: [
-        { name: "Agenda de medicamentos e compromissos médicos", included: true },
-        { name: "Lembretes automáticos de rotina", included: true },
-        { name: "Registro diário simples de tarefas", included: true },
-        { name: "Controle de medicamentos", included: true },
-        { name: "Histórico médico simples (consultas e exames)", included: true },
-        { name: "Perfil básico do idoso e do cuidador", included: true },
-        { name: "Acesso a artigos e dicas sobre cuidados", included: true },
-        { name: "Interface acessível com alto contraste", included: true },
-        { name: "Suporte por email", included: true },
-        { name: "Histórico de 30 dias", included: true },
+      showBasicIncluded: true,
+      basicSummary: "Tudo do Plano Básico",
+      advancedFeatures: [
         { name: "Botão de emergência", included: true },
         { name: "Alertas de saúde inteligentes", included: true },
         { name: "Monitoramento comportamental", included: true },
@@ -58,6 +39,8 @@ const Pricing = () => {
         { name: "Atendimento preferencial", included: true },
         { name: "Histórico ilimitado", included: true },
         { name: "Múltiplos perfis de idosos", included: true },
+        { name: "Suporte prioritário por email", included: true },
+        { name: "Acesso a artigos e conteúdos premium", included: true },
       ],
     },
   ];
@@ -85,7 +68,7 @@ const Pricing = () => {
               className={cn(
                 "flex flex-col relative rounded-2xl lg:rounded-3xl transition-all bg-card items-start w-full border overflow-hidden",
                 plan.popular 
-                  ? "md:scale-110 border-2 border-primary shadow-elegant z-10 mt-4" 
+                  ? "md:scale-[1.15] border-2 border-primary shadow-elegant z-10 mt-4" 
                   : "border-border shadow-card hover:shadow-soft"
               )}
             >
@@ -180,29 +163,70 @@ const Pricing = () => {
               </div>
 
               <div className="flex flex-col items-start w-full p-5 mb-4 ml-1 gap-y-2">
-                <span className="text-base text-left mb-2 font-medium">
-                  Recursos:
-                </span>
-                {plan.features.map((feature, index) => (
-                  <div key={index} className="flex items-center justify-start gap-3">
-                    <div className={cn(
-                      "flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0",
-                      feature.included ? "bg-secondary/10" : "bg-muted"
-                    )}>
-                      {feature.included ? (
-                        <Check className="w-4 h-4 text-secondary" />
-                      ) : (
-                        <X className="w-4 h-4 text-muted-foreground" />
-                      )}
+                {plan.showBasicIncluded ? (
+                  <>
+                    {/* Badge "Tudo do Plano Básico +" */}
+                    <div className="w-full mb-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border-2 border-primary/30">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">✨</span>
+                        <span className="text-base font-bold text-primary">
+                          {plan.basicSummary} +
+                        </span>
+                      </div>
                     </div>
-                    <span className={cn(
-                      "text-sm",
-                      feature.included ? "text-foreground" : "text-muted-foreground"
-                    )}>
-                      {feature.name}
+                    
+                    {/* Recursos Avançados Exclusivos */}
+                    <span className="text-base text-left mb-3 font-bold text-foreground">
+                      Recursos Avançados Exclusivos:
                     </span>
-                  </div>
-                ))}
+                    {plan.advancedFeatures?.map((feature, index) => (
+                      <div key={index} className="flex items-center justify-start gap-3">
+                        <div className={cn(
+                          "flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0",
+                          feature.included ? "bg-secondary/10" : "bg-muted"
+                        )}>
+                          {feature.included ? (
+                            <Check className="w-4 h-4 text-secondary" />
+                          ) : (
+                            <X className="w-4 h-4 text-muted-foreground" />
+                          )}
+                        </div>
+                        <span className={cn(
+                          "text-sm",
+                          feature.included ? "text-foreground font-medium" : "text-muted-foreground"
+                        )}>
+                          {feature.name}
+                        </span>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <span className="text-base text-left mb-2 font-medium">
+                      Recursos:
+                    </span>
+                    {plan.features?.map((feature, index) => (
+                      <div key={index} className="flex items-center justify-start gap-3">
+                        <div className={cn(
+                          "flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0",
+                          feature.included ? "bg-secondary/10" : "bg-muted"
+                        )}>
+                          {feature.included ? (
+                            <Check className="w-4 h-4 text-secondary" />
+                          ) : (
+                            <X className="w-4 h-4 text-muted-foreground" />
+                          )}
+                        </div>
+                        <span className={cn(
+                          "text-sm",
+                          feature.included ? "text-foreground" : "text-muted-foreground"
+                        )}>
+                          {feature.name}
+                        </span>
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
             </motion.div>
           ))}
