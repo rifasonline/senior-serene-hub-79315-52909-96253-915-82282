@@ -1,7 +1,12 @@
 import { Heart, Target, Users, Award } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCountUp } from "@/hooks/useCountUp";
 
 const About = () => {
+  const { count: cuidadoresCount, ref: cuidadoresRef } = useCountUp({ end: 10000, duration: 2500 });
+  const { count: medicamentosCount, ref: medicamentosRef } = useCountUp({ end: 50000, duration: 2500 });
+  const { count: avaliacaoCount, ref: avaliacaoRef } = useCountUp({ end: 4.9, duration: 2500, decimals: 1 });
+
   const values = [
     {
       icon: Heart,
@@ -87,16 +92,22 @@ const About = () => {
               Nosso Impacto
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-              <div className="space-y-2">
-                <p className="text-5xl font-bold text-primary-foreground">10,000+</p>
+              <div className="space-y-2" ref={cuidadoresRef}>
+                <p className="text-5xl font-bold text-primary-foreground">
+                  {cuidadoresCount.toLocaleString('pt-BR')}+
+                </p>
                 <p className="text-lg text-primary-foreground/90">Cuidadores Ativos</p>
               </div>
-              <div className="space-y-2">
-                <p className="text-5xl font-bold text-primary-foreground">50,000+</p>
+              <div className="space-y-2" ref={medicamentosRef}>
+                <p className="text-5xl font-bold text-primary-foreground">
+                  {medicamentosCount.toLocaleString('pt-BR')}+
+                </p>
                 <p className="text-lg text-primary-foreground/90">Medicamentos Gerenciados</p>
               </div>
-              <div className="space-y-2">
-                <p className="text-5xl font-bold text-primary-foreground">4.9/5</p>
+              <div className="space-y-2" ref={avaliacaoRef}>
+                <p className="text-5xl font-bold text-primary-foreground">
+                  {avaliacaoCount.toFixed(1)}/5
+                </p>
                 <p className="text-lg text-primary-foreground/90">Avaliação dos Usuários</p>
               </div>
             </div>

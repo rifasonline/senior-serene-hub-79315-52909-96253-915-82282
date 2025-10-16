@@ -24,7 +24,7 @@ const CallToAction = () => {
                 variant="outline" 
                 size="lg" 
                 onClick={() => window.open('https://play.google.com', '_blank')}
-                className="bg-white text-primary hover:bg-white/90 border-0 shadow-soft group"
+                className="bg-white text-primary hover:bg-white hover:shadow-lg border-0 shadow-soft group"
               >
                 <Download className="mr-2 h-5 w-5 transition-smooth group-hover:translate-y-0.5" />
                 Baixar Aplicativo

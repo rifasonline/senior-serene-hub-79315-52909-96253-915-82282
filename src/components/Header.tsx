@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo-main.png";
@@ -7,16 +7,36 @@ import logo from "@/assets/logo-main.png";
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Início", path: "/" },
     { name: "Funcionalidades", path: "/features" },
-    { name: "Planos", path: "/#pricing" },
+    { name: "Planos", path: "/#pricing", isHash: true },
     { name: "Sobre", path: "/about" },
     { name: "Contato", path: "/contact" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleNavClick = (item: typeof navItems[0]) => {
+    if (item.isHash) {
+      if (location.pathname === "/") {
+        const pricingSection = document.getElementById('pricing');
+        if (pricingSection) {
+          pricingSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        navigate('/');
+        setTimeout(() => {
+          const pricingSection = document.getElementById('pricing');
+          if (pricingSection) {
+            pricingSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      }
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur-lg shadow-card">
@@ -30,17 +50,27 @@ const Header = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-1">
             {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-smooth ${
-                  isActive(item.path)
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                {item.name}
-              </Link>
+              item.isHash ? (
+                <button
+                  key={item.path}
+                  onClick={() => handleNavClick(item)}
+                  className="px-4 py-2 rounded-md text-sm font-medium transition-smooth text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  {item.name}
+                </button>
+              ) : (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-smooth ${
+                    isActive(item.path)
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
           </div>
 
@@ -69,18 +99,31 @@ const Header = () => {
           <div className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col space-y-2">
               {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setIsOpen(false)}
-                  className={`px-4 py-3 rounded-md text-sm font-medium transition-smooth ${
-                    isActive(item.path)
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
-                >
-                  {item.name}
-                </Link>
+                item.isHash ? (
+                  <button
+                    key={item.path}
+                    onClick={() => {
+                      handleNavClick(item);
+                      setIsOpen(false);
+                    }}
+                    className="px-4 py-3 rounded-md text-sm font-medium transition-smooth text-muted-foreground hover:bg-muted hover:text-foreground text-left"
+                  >
+                    {item.name}
+                  </button>
+                ) : (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`px-4 py-3 rounded-md text-sm font-medium transition-smooth ${
+                      isActive(item.path)
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
               <div className="pt-2">
                 <Button 
