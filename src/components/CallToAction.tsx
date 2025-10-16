@@ -21,10 +21,10 @@ const CallToAction = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
-                variant="outline" 
+                variant="default" 
                 size="lg" 
                 onClick={() => window.open('https://play.google.com', '_blank')}
-                className="bg-white text-primary hover:bg-white hover:shadow-lg border-0 shadow-soft group"
+                className="bg-white text-primary hover:bg-white/95 hover:text-primary border-0 shadow-soft hover:shadow-lg group"
               >
                 <Download className="mr-2 h-5 w-5 transition-smooth group-hover:translate-y-0.5" />
                 Baixar Aplicativo
