@@ -22,10 +22,11 @@ const Pricing = () => {
       name: "Plano Pro",
       price: "49,90",
       popular: true,
-      badge: "Escolha de 95% dos usuários",
+      badge: "Mais Popular",
       description: "Cuidado completo com monitoramento avançado e suporte prioritário.",
       features: [
         "Tudo do Plano Básico",
+        "Botão de emergência",
         "Alertas de saúde inteligentes",
         "Monitoramento comportamental",
         "Atividades personalizadas",
