@@ -68,7 +68,7 @@ const Pricing = () => {
             >
               {plan.popular && (
                 <>
-                  {/* Badge Melhor Custo-Benefício - Acima do Card */}
+                  {/* Badge Mais Comprado - Bem Acima do Card */}
                   <motion.div
                     initial={{ opacity: 0, y: -30, scale: 0.8 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -78,30 +78,40 @@ const Pricing = () => {
                       type: "spring",
                       stiffness: 200,
                       damping: 15,
-                      delay: 0.2
+                      delay: 0.1
                     }}
-                    className="absolute -top-16 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
+                    className="absolute -top-20 left-1/2 -translate-x-1/2 z-30"
                   >
-                    <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-secondary via-primary to-secondary bg-[length:200%_100%] animate-gradient text-white font-bold text-base shadow-elegant whitespace-nowrap">
-                      <span className="animate-pulse">🔥</span>
-                      <span>Melhor Custo-Benefício</span>
-                      <span className="animate-pulse">🔥</span>
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary blur-xl opacity-60 animate-pulse"></div>
+                      <div className="relative inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-bold text-base shadow-glow border-2 border-white/20">
+                        <span className="text-xl">⭐</span>
+                        <span className="whitespace-nowrap">MAIS COMPRADO</span>
+                        <span className="text-xl">⭐</span>
+                      </div>
                     </div>
+                  </motion.div>
+                  
+                  {/* Badge Melhor Custo-Benefício */}
+                  <motion.div
+                    initial={{ opacity: 0, y: -20, scale: 0.9 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ 
+                      duration: 0.5,
+                      delay: 0.25
+                    }}
+                    className="absolute -top-3 left-1/2 -translate-x-1/2 z-20"
+                  >
                     {plan.badge && (
-                      <div className="px-4 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm border border-primary/30">
-                        <span className="text-xs font-semibold text-primary">
-                          ⭐ {plan.badge}
+                      <div className="px-5 py-2 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-soft">
+                        <span className="text-xs font-bold text-accent-foreground whitespace-nowrap">
+                          {plan.badge}
                         </span>
                       </div>
                     )}
                   </motion.div>
                   
-                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-20">
-                    <div className="badge-popular flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-semibold animate-pulse">
-                      <Sparkles className="w-3 h-3" />
-                      MAIS POPULAR
-                    </div>
-                  </div>
                   <div className="absolute top-1/2 inset-x-0 mx-auto h-12 -rotate-45 w-full bg-primary/30 rounded-2xl lg:rounded-3xl blur-[8rem] -z-10"></div>
                 </>
               )}
