@@ -3,6 +3,7 @@ import { Star } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
+import anaCostaImage from "@/assets/ana-costa.png";
 
 const Testimonials = () => {
   const testimonials = [
@@ -24,6 +25,7 @@ const Testimonials = () => {
       name: "Ana Costa",
       role: "Enfermeira",
       avatar: "AC",
+      image: anaCostaImage,
       text: "A interface é super intuitiva e as funcionalidades são completas. Os relatórios em PDF facilitam muito a comunicação com os médicos.",
       rating: 5,
     },
@@ -85,9 +87,17 @@ const Testimonials = () => {
               >
                 <Card className="p-6 shadow-card hover:shadow-elegant transition-all duration-300 h-full border-border bg-card/80 backdrop-blur-sm">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-14 h-14 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold text-lg shadow-soft">
-                      {testimonial.avatar}
-                    </div>
+                    {testimonial.image ? (
+                      <img 
+                        src={testimonial.image} 
+                        alt={testimonial.name}
+                        className="w-14 h-14 rounded-full object-cover shadow-soft border-2 border-primary/20"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold text-lg shadow-soft">
+                        {testimonial.avatar}
+                      </div>
+                    )}
                     <div>
                       <h4 className="font-semibold text-foreground">
                         {testimonial.name}
