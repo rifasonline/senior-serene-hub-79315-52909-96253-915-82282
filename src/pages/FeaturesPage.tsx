@@ -1,4 +1,4 @@
-import { Calendar, Activity, Stethoscope, HeartPulse } from "lucide-react";
+import { Calendar, Activity, Stethoscope, HeartPulse, Phone } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const FeaturesPage = () => {
@@ -51,6 +51,18 @@ const FeaturesPage = () => {
       ],
       color: "secondary",
     },
+    {
+      icon: Phone,
+      title: "Botão de Emergência (Plano Pro)",
+      description: "Acesso rápido a números de emergência",
+      items: [
+        "Botão flutuante sempre visível",
+        "Acesso direto ao SAMU (192)",
+        "Ligação rápida para Bombeiros (193)",
+        "Contato imediato com Polícia (190)",
+      ],
+      color: "primary",
+    },
   ];
 
   return (
@@ -66,7 +78,7 @@ const FeaturesPage = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {featureDetails.map((feature, index) => (
             <Card 
               key={index} 
