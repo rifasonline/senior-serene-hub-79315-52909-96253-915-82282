@@ -19,6 +19,12 @@ const Pricing = () => {
         { name: "Perfil básico do idoso e do cuidador", included: true },
         { name: "Interface acessível com alto contraste", included: true },
         { name: "Histórico de 30 dias", included: true },
+        { name: "Botão de emergência", included: false },
+        { name: "Alertas de saúde inteligentes", included: false },
+        { name: "Monitoramento comportamental", included: false },
+        { name: "Telemedicina integrada", included: false },
+        { name: "Relatórios médicos em PDF", included: false },
+        { name: "Suporte prioritário", included: false },
       ],
     },
     {
@@ -91,9 +97,7 @@ const Pricing = () => {
                     <div className="relative">
                       <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary blur-xl opacity-60 animate-pulse"></div>
                       <div className="relative inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-bold text-base shadow-glow border-2 border-white/20">
-                        <span className="text-xl">⭐</span>
                         <span className="whitespace-nowrap">MAIS COMPRADO</span>
-                        <span className="text-xl">⭐</span>
                       </div>
                     </div>
                   </motion.div>
