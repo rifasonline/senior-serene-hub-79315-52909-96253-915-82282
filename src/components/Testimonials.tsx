@@ -6,6 +6,7 @@ import Autoplay from "embla-carousel-autoplay";
 import anaCostaImage from "@/assets/ana-costa.png";
 import robertoLimaImage from "@/assets/roberto-lima.png";
 import carlosOliveiraImage from "@/assets/carlos-oliveira.png";
+import joaoSantosImage from "@/assets/joao-santos.png";
 
 const Testimonials = () => {
   const testimonials = [
@@ -20,6 +21,7 @@ const Testimonials = () => {
       name: "João Santos",
       role: "Filho de Idoso",
       avatar: "JS",
+      image: joaoSantosImage,
       text: "Mesmo morando longe, consigo acompanhar os cuidados com meu pai. Os alertas me dão tranquilidade e segurança. Melhor investimento que fiz!",
       rating: 5,
     },
