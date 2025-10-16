@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Check, Sparkles, ArrowRight } from "lucide-react";
+import { Check, Sparkles, ArrowRight, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Pricing = () => {
@@ -11,16 +11,25 @@ const Pricing = () => {
       popular: false,
       description: "Ideal para começar a cuidar com organização e lembretes essenciais.",
       features: [
-        "Agenda de medicamentos e compromissos médicos",
-        "Lembretes automáticos de rotina",
-        "Registro diário simples de tarefas",
-        "Controle de medicamentos",
-        "Histórico médico simples (consultas e exames)",
-        "Perfil básico do idoso e do cuidador",
-        "Acesso a artigos e dicas sobre cuidados",
-        "Interface acessível com alto contraste",
-        "Suporte por email",
-        "Histórico de 30 dias",
+        { name: "Agenda de medicamentos e compromissos médicos", included: true },
+        { name: "Lembretes automáticos de rotina", included: true },
+        { name: "Registro diário simples de tarefas", included: true },
+        { name: "Controle de medicamentos", included: true },
+        { name: "Histórico médico simples (consultas e exames)", included: true },
+        { name: "Perfil básico do idoso e do cuidador", included: true },
+        { name: "Acesso a artigos e dicas sobre cuidados", included: true },
+        { name: "Interface acessível com alto contraste", included: true },
+        { name: "Suporte por email", included: true },
+        { name: "Histórico de 30 dias", included: true },
+        { name: "Botão de emergência", included: false },
+        { name: "Alertas de saúde inteligentes", included: false },
+        { name: "Monitoramento comportamental", included: false },
+        { name: "Atividades personalizadas", included: false },
+        { name: "Telemedicina integrada", included: false },
+        { name: "Relatórios médicos em PDF", included: false },
+        { name: "Atendimento preferencial", included: false },
+        { name: "Histórico ilimitado", included: false },
+        { name: "Múltiplos perfis de idosos", included: false },
       ],
     },
     {
@@ -30,16 +39,25 @@ const Pricing = () => {
       badge: "Mais Popular",
       description: "Cuidado completo com monitoramento avançado e suporte prioritário.",
       features: [
-        "Tudo do Plano Básico",
-        "Botão de emergência",
-        "Alertas de saúde inteligentes",
-        "Monitoramento comportamental",
-        "Atividades personalizadas",
-        "Telemedicina integrada",
-        "Relatórios médicos em PDF",
-        "Atendimento preferencial",
-        "Histórico ilimitado",
-        "Múltiplos perfis de idosos",
+        { name: "Agenda de medicamentos e compromissos médicos", included: true },
+        { name: "Lembretes automáticos de rotina", included: true },
+        { name: "Registro diário simples de tarefas", included: true },
+        { name: "Controle de medicamentos", included: true },
+        { name: "Histórico médico simples (consultas e exames)", included: true },
+        { name: "Perfil básico do idoso e do cuidador", included: true },
+        { name: "Acesso a artigos e dicas sobre cuidados", included: true },
+        { name: "Interface acessível com alto contraste", included: true },
+        { name: "Suporte por email", included: true },
+        { name: "Histórico de 30 dias", included: true },
+        { name: "Botão de emergência", included: true },
+        { name: "Alertas de saúde inteligentes", included: true },
+        { name: "Monitoramento comportamental", included: true },
+        { name: "Atividades personalizadas", included: true },
+        { name: "Telemedicina integrada", included: true },
+        { name: "Relatórios médicos em PDF", included: true },
+        { name: "Atendimento preferencial", included: true },
+        { name: "Histórico ilimitado", included: true },
+        { name: "Múltiplos perfis de idosos", included: true },
       ],
     },
   ];
@@ -163,14 +181,26 @@ const Pricing = () => {
 
               <div className="flex flex-col items-start w-full p-5 mb-4 ml-1 gap-y-2">
                 <span className="text-base text-left mb-2 font-medium">
-                  Inclui:
+                  Recursos:
                 </span>
                 {plan.features.map((feature, index) => (
-                  <div key={index} className="flex items-center justify-start gap-2">
-                    <div className="flex items-center justify-center">
-                      <Check className="w-5 h-5 text-secondary" />
+                  <div key={index} className="flex items-center justify-start gap-3">
+                    <div className={cn(
+                      "flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0",
+                      feature.included ? "bg-secondary/10" : "bg-muted"
+                    )}>
+                      {feature.included ? (
+                        <Check className="w-4 h-4 text-secondary" />
+                      ) : (
+                        <X className="w-4 h-4 text-muted-foreground" />
+                      )}
                     </div>
-                    <span className="text-foreground">{feature}</span>
+                    <span className={cn(
+                      "text-sm",
+                      feature.included ? "text-foreground" : "text-muted-foreground"
+                    )}>
+                      {feature.name}
+                    </span>
                   </div>
                 ))}
               </div>
