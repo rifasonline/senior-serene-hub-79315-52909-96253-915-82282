@@ -7,6 +7,7 @@ import anaCostaImage from "@/assets/ana-costa.png";
 import robertoLimaImage from "@/assets/roberto-lima.png";
 import carlosOliveiraImage from "@/assets/carlos-oliveira.png";
 import joaoSantosImage from "@/assets/joao-santos.png";
+import mariaSilvaImage from "@/assets/maria-silva.png";
 
 const Testimonials = () => {
   const testimonials = [
@@ -14,6 +15,7 @@ const Testimonials = () => {
       name: "Maria Silva",
       role: "Cuidadora Profissional",
       avatar: "MS",
+      image: mariaSilvaImage,
       text: "O CuidaBem transformou minha rotina! Agora consigo organizar todos os medicamentos e compromissos dos meus pacientes em um só lugar. Indispensável!",
       rating: 5,
     },
