@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import anaCostaImage from "@/assets/ana-costa.png";
 import robertoLimaImage from "@/assets/roberto-lima.png";
+import carlosOliveiraImage from "@/assets/carlos-oliveira.png";
 
 const Testimonials = () => {
   const testimonials = [
@@ -34,6 +35,7 @@ const Testimonials = () => {
       name: "Carlos Oliveira",
       role: "Familiar Cuidador",
       avatar: "CO",
+      image: carlosOliveiraImage,
       text: "As sugestões de atividades mantêm minha mãe ativa e engajada. O suporte 24/7 é excelente. Recomendo de olhos fechados!",
       rating: 5,
     },
