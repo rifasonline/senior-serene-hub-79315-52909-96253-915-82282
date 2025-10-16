@@ -4,6 +4,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import anaCostaImage from "@/assets/ana-costa.png";
+import robertoLimaImage from "@/assets/roberto-lima.png";
 
 const Testimonials = () => {
   const testimonials = [
@@ -47,6 +48,7 @@ const Testimonials = () => {
       name: "Roberto Lima",
       role: "Médico Geriatra",
       avatar: "RL",
+      image: robertoLimaImage,
       text: "Recomendo o CuidaBem para todos os meus pacientes. A qualidade do acompanhamento melhorou significativamente.",
       rating: 5,
     },
