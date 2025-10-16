@@ -8,6 +8,7 @@ import robertoLimaImage from "@/assets/roberto-lima.png";
 import carlosOliveiraImage from "@/assets/carlos-oliveira.png";
 import joaoSantosImage from "@/assets/joao-santos.png";
 import mariaSilvaImage from "@/assets/maria-silva.png";
+import paulaMendesImage from "@/assets/paula-mendes.png";
 
 const Testimonials = () => {
   const testimonials = [
@@ -47,6 +48,7 @@ const Testimonials = () => {
       name: "Paula Mendes",
       role: "Cuidadora",
       avatar: "PM",
+      image: paulaMendesImage,
       text: "Nunca imaginei que cuidar pudesse ser tão organizado. O app me poupa tempo e evita esquecimentos importantes.",
       rating: 5,
     },
