@@ -139,24 +139,6 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="space-y-4">
-              {contactInfo.map((info, index) => (
-                <Card 
-                  key={index} 
-                  className="border-border bg-card shadow-card hover:shadow-soft transition-smooth"
-                >
-                  <CardContent className="p-6 flex items-start space-x-4">
-                    <div className={`p-3 rounded-lg gradient-${info.color}`}>
-                      <info.icon className="h-6 w-6 text-primary-foreground" />
-                    </div>
-                    <div className="space-y-1">
-                      <h3 className="font-semibold text-foreground">{info.title}</h3>
-                      <p className="text-muted-foreground">{info.content}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
 
             <Card className="border-border bg-muted/50">
               <CardContent className="p-6 space-y-2">
