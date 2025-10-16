@@ -172,9 +172,8 @@ const Pricing = () => {
                     {/* Badge "Tudo do Plano Básico +" */}
                     <div className="w-full mb-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border-2 border-primary/30">
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl">✨</span>
                         <span className="text-base font-bold text-primary">
-                          {plan.basicSummary} +
+                          {plan.basicSummary}
                         </span>
                       </div>
                     </div>
