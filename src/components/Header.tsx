@@ -134,13 +134,25 @@ const Header = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth"
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Mobile Login Button & Menu */}
+          <div className="md:hidden flex items-center gap-2">
+            {!user && (
+              <Button 
+                variant="default" 
+                size="sm"
+                onClick={() => navigate("/auth")}
+                className="text-xs px-3"
+              >
+                Entrar
+              </Button>
+            )}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth"
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
