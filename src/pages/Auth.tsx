@@ -8,11 +8,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { z } from "zod";
+import { validateCPF, formatCPF, formatPhone } from "@/lib/cpf-validator";
 
 const authSchema = z.object({
   email: z.string().email("Email inválido"),
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
-  fullName: z.string().optional(),
+  fullName: z.string().min(3, "Nome deve ter pelo menos 3 caracteres").optional(),
+  phone: z.string().min(10, "Telefone inválido").optional(),
+  cpf: z.string().refine((cpf) => validateCPF(cpf), {
+    message: "CPF inválido",
+  }).optional(),
 });
 
 const Auth = () => {
@@ -22,6 +27,8 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [cpf, setCpf] = useState("");
 
   useEffect(() => {
     // Check if user is already logged in
@@ -47,7 +54,7 @@ const Auth = () => {
     e.preventDefault();
     
     try {
-      authSchema.parse({ email, password, fullName });
+      authSchema.parse({ email, password, fullName, phone, cpf });
     } catch (error) {
       if (error instanceof z.ZodError) {
         toast({
@@ -61,6 +68,9 @@ const Auth = () => {
 
     setLoading(true);
 
+    const cleanCpf = cpf.replace(/\D/g, '');
+    const cleanPhone = phone.replace(/\D/g, '');
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -68,6 +78,8 @@ const Auth = () => {
         emailRedirectTo: `${window.location.origin}/`,
         data: {
           full_name: fullName,
+          phone: cleanPhone,
+          cpf: cleanCpf,
         },
       },
     });
@@ -171,17 +183,42 @@ const Auth = () => {
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">Nome Completo</Label>
+                  <Label htmlFor="signup-name">Nome Completo *</Label>
                   <Input
                     id="signup-name"
                     type="text"
-                    placeholder="Seu nome"
+                    placeholder="Seu nome completo"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
+                  <Label htmlFor="signup-cpf">CPF *</Label>
+                  <Input
+                    id="signup-cpf"
+                    type="text"
+                    placeholder="000.000.000-00"
+                    value={cpf}
+                    onChange={(e) => setCpf(formatCPF(e.target.value))}
+                    maxLength={14}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-phone">Telefone *</Label>
+                  <Input
+                    id="signup-phone"
+                    type="tel"
+                    placeholder="(00) 00000-0000"
+                    value={phone}
+                    onChange={(e) => setPhone(formatPhone(e.target.value))}
+                    maxLength={15}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-email">Email *</Label>
                   <Input
                     id="signup-email"
                     type="email"
@@ -192,7 +229,7 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">Senha</Label>
+                  <Label htmlFor="signup-password">Senha *</Label>
                   <Input
                     id="signup-password"
                     type="password"
