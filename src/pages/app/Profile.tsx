@@ -38,6 +38,7 @@ interface ElderlyProfile {
   emergency_contact_phone: string | null;
   medical_conditions: string[] | null;
   allergies: string[] | null;
+  blood_type: string | null;
 }
 
 export default function Profile() {
@@ -74,6 +75,7 @@ export default function Profile() {
   const [elderlyForm, setElderlyForm] = useState({
     name: "",
     birth_date: "",
+    blood_type: "",
     emergency_contact_name: "",
     emergency_contact_phone: "",
   });
@@ -186,6 +188,7 @@ export default function Profile() {
           .update({
             name: elderlyForm.name,
             birth_date: elderlyForm.birth_date,
+            blood_type: elderlyForm.blood_type || null,
             emergency_contact_name: elderlyForm.emergency_contact_name || null,
             emergency_contact_phone: elderlyForm.emergency_contact_phone || null,
           })
@@ -204,6 +207,7 @@ export default function Profile() {
             caregiver_id: user.id,
             name: elderlyForm.name,
             birth_date: elderlyForm.birth_date,
+            blood_type: elderlyForm.blood_type || null,
             emergency_contact_name: elderlyForm.emergency_contact_name || null,
             emergency_contact_phone: elderlyForm.emergency_contact_phone || null,
           });
@@ -218,7 +222,7 @@ export default function Profile() {
 
       await fetchElderlyProfiles(user.id);
       setIsElderlyDialogOpen(false);
-      setElderlyForm({ name: "", birth_date: "", emergency_contact_name: "", emergency_contact_phone: "" });
+      setElderlyForm({ name: "", birth_date: "", blood_type: "", emergency_contact_name: "", emergency_contact_phone: "" });
       setEditingElderly(null);
     } catch (error: any) {
       console.error("Error saving elderly profile:", error);
@@ -261,12 +265,13 @@ export default function Profile() {
       setElderlyForm({
         name: elderly.name,
         birth_date: elderly.birth_date,
+        blood_type: elderly.blood_type || "",
         emergency_contact_name: elderly.emergency_contact_name || "",
         emergency_contact_phone: elderly.emergency_contact_phone || "",
       });
     } else {
       setEditingElderly(null);
-      setElderlyForm({ name: "", birth_date: "", emergency_contact_name: "", emergency_contact_phone: "" });
+      setElderlyForm({ name: "", birth_date: "", blood_type: "", emergency_contact_name: "", emergency_contact_phone: "" });
     }
     setIsElderlyDialogOpen(true);
   };
@@ -828,6 +833,12 @@ export default function Profile() {
                             <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
                               <Calendar className="h-3 w-3" />
                               <span>{calculateAge(elderly.birth_date)} anos</span>
+                              {elderly.blood_type && (
+                                <>
+                                  <span className="mx-1">•</span>
+                                  <span className="font-medium text-destructive">{elderly.blood_type}</span>
+                                </>
+                              )}
                             </div>
                             {elderly.emergency_contact_name && (
                               <p className="text-xs text-muted-foreground mt-1 truncate">
@@ -909,6 +920,26 @@ export default function Profile() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="elderly_blood_type">Tipo Sanguíneo</Label>
+                <select
+                  id="elderly_blood_type"
+                  value={elderlyForm.blood_type}
+                  onChange={(e) => setElderlyForm({ ...elderlyForm, blood_type: e.target.value })}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">Selecione</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+              </div>
+
               <Separator />
 
               <div className="space-y-2">
@@ -937,7 +968,7 @@ export default function Profile() {
                 variant="outline"
                 onClick={() => {
                   setIsElderlyDialogOpen(false);
-                  setElderlyForm({ name: "", birth_date: "", emergency_contact_name: "", emergency_contact_phone: "" });
+                  setElderlyForm({ name: "", birth_date: "", blood_type: "", emergency_contact_name: "", emergency_contact_phone: "" });
                   setEditingElderly(null);
                 }}
               >

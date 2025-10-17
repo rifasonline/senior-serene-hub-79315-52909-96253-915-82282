@@ -118,6 +118,7 @@ export type Database = {
         Row: {
           allergies: string[] | null
           birth_date: string
+          blood_type: string | null
           caregiver_id: string
           created_at: string
           emergency_contact_name: string | null
@@ -131,6 +132,7 @@ export type Database = {
         Insert: {
           allergies?: string[] | null
           birth_date: string
+          blood_type?: string | null
           caregiver_id: string
           created_at?: string
           emergency_contact_name?: string | null
@@ -144,6 +146,7 @@ export type Database = {
         Update: {
           allergies?: string[] | null
           birth_date?: string
+          blood_type?: string | null
           caregiver_id?: string
           created_at?: string
           emergency_contact_name?: string | null
