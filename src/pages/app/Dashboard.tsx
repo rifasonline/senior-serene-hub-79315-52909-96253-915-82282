@@ -33,6 +33,7 @@ interface DashboardStats {
 export default function Dashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
+  const [profileData, setProfileData] = useState<{ avatar_url?: string; full_name?: string } | null>(null);
   const [stats, setStats] = useState<DashboardStats>({
     totalTasks: 0,
     completedTasks: 0,
@@ -50,12 +51,30 @@ export default function Dashboard() {
 
       if (session?.user) {
         await loadDashboardStats(session.user.id);
+        await loadProfile(session.user.id);
       }
       setLoading(false);
     };
 
     loadData();
   }, []);
+
+  const loadProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('avatar_url, full_name')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (data) {
+        setProfileData(data);
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
+    }
+  };
 
   const loadDashboardStats = async (userId: string) => {
     try {
@@ -169,14 +188,14 @@ export default function Dashboard() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16 border-2 border-primary">
-                  <AvatarImage src={user?.user_metadata?.avatar_url} />
+                  <AvatarImage src={profileData?.avatar_url || user?.user_metadata?.avatar_url} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-xl">
-                    {getInitials(user?.user_metadata?.full_name)}
+                    {getInitials(profileData?.full_name || user?.user_metadata?.full_name)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <CardTitle className="text-2xl">
-                    Olá, {user?.user_metadata?.full_name || 'Usuário'}!
+                    Olá, {profileData?.full_name || user?.user_metadata?.full_name || 'Usuário'}!
                   </CardTitle>
                   <CardDescription className="flex items-center gap-2 mt-1">
                     {subscription.plan === 'pro' ? (
