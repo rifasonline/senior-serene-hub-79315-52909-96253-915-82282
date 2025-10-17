@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ interface ElderlyProfile {
 }
 
 export default function Tasks() {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [elderlyProfiles, setElderlyProfiles] = useState<ElderlyProfile[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -609,7 +611,7 @@ export default function Tasks() {
             <div className="flex justify-center pt-4">
               <Button 
                 variant="outline" 
-                onClick={() => window.location.href = "/app/history"}
+                onClick={() => navigate("/app/history")}
                 className="gap-2"
               >
                 <Calendar className="h-4 w-4" />
