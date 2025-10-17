@@ -10,8 +10,8 @@ const Home = () => {
     <div className="min-h-screen">
       <Hero />
       <Features />
-      <CareTogether />
       <Pricing />
+      <CareTogether />
       <Testimonials />
       <CallToAction />
     </div>
