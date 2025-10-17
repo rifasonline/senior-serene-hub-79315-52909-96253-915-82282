@@ -58,12 +58,20 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-smooth">
+                <Link 
+                  to="/privacy" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-smooth"
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
                   Política de Privacidade
                 </Link>
               </li>
               <li>
-                <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-smooth">
+                <Link 
+                  to="/terms" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-smooth"
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
                   Termos de Uso
                 </Link>
               </li>
