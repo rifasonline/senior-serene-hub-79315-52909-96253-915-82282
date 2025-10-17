@@ -1,0 +1,31 @@
+import careTogetherImage from "@/assets/care-together.jpg";
+
+const CareTogether = () => {
+  return (
+    <section className="py-20 bg-gradient-subtle">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative overflow-hidden rounded-2xl shadow-elegant">
+            <img
+              src={careTogetherImage}
+              alt="Idoso e cuidador juntos, olhando confiantes para o futuro"
+              className="w-full h-[500px] object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/50 to-transparent flex items-end">
+              <div className="p-8 sm:p-12 w-full text-center animate-fade-in-up">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+                  Cuidar com amor, viver com dignidade
+                </h2>
+                <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+                  Juntos, construímos um futuro onde cada momento importa e cada cuidado fortalece laços
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default CareTogether;
