@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -106,6 +106,14 @@ const Header = () => {
                   Olá, {user.email}
                 </span>
                 <Button 
+                  variant="default" 
+                  size="lg"
+                  onClick={() => navigate("/app/dashboard")}
+                >
+                  <LayoutDashboard className="w-4 h-4 mr-2" />
+                  Dashboard
+                </Button>
+                <Button 
                   variant="outline" 
                   size="lg"
                   onClick={handleSignOut}
@@ -183,6 +191,18 @@ const Header = () => {
                     <div className="px-4 py-2 text-sm text-muted-foreground">
                       {user.email}
                     </div>
+                    <Button 
+                      variant="default" 
+                      size="lg" 
+                      className="w-full"
+                      onClick={() => {
+                        navigate("/app/dashboard");
+                        setIsOpen(false);
+                      }}
+                    >
+                      <LayoutDashboard className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Button>
                     <Button 
                       variant="outline" 
                       size="lg" 
