@@ -14,6 +14,235 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          appointment_date: string
+          completed: boolean
+          created_at: string
+          description: string | null
+          doctor_name: string | null
+          elderly_id: string
+          id: string
+          location: string | null
+          title: string
+        }
+        Insert: {
+          appointment_date: string
+          completed?: boolean
+          created_at?: string
+          description?: string | null
+          doctor_name?: string | null
+          elderly_id: string
+          id?: string
+          location?: string | null
+          title: string
+        }
+        Update: {
+          appointment_date?: string
+          completed?: boolean
+          created_at?: string
+          description?: string | null
+          doctor_name?: string | null
+          elderly_id?: string
+          id?: string
+          location?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_elderly_id_fkey"
+            columns: ["elderly_id"]
+            isOneToOne: false
+            referencedRelation: "elderly_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_tasks: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          description: string
+          elderly_id: string
+          id: string
+          notes: string | null
+          scheduled_time: string
+          task_type: Database["public"]["Enums"]["task_type"]
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          description: string
+          elderly_id: string
+          id?: string
+          notes?: string | null
+          scheduled_time: string
+          task_type: Database["public"]["Enums"]["task_type"]
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          description?: string
+          elderly_id?: string
+          id?: string
+          notes?: string | null
+          scheduled_time?: string
+          task_type?: Database["public"]["Enums"]["task_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_tasks_elderly_id_fkey"
+            columns: ["elderly_id"]
+            isOneToOne: false
+            referencedRelation: "elderly_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      elderly_profiles: {
+        Row: {
+          allergies: string[] | null
+          birth_date: string
+          caregiver_id: string
+          created_at: string
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          id: string
+          medical_conditions: string[] | null
+          name: string
+          photo_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          allergies?: string[] | null
+          birth_date: string
+          caregiver_id: string
+          created_at?: string
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          id?: string
+          medical_conditions?: string[] | null
+          name: string
+          photo_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          allergies?: string[] | null
+          birth_date?: string
+          caregiver_id?: string
+          created_at?: string
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          id?: string
+          medical_conditions?: string[] | null
+          name?: string
+          photo_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "elderly_profiles_caregiver_id_fkey"
+            columns: ["caregiver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medical_history: {
+        Row: {
+          attachments: string[] | null
+          created_at: string
+          date: string
+          description: string
+          doctor_name: string | null
+          elderly_id: string
+          entry_type: Database["public"]["Enums"]["medical_entry_type"]
+          id: string
+          location: string | null
+          title: string
+        }
+        Insert: {
+          attachments?: string[] | null
+          created_at?: string
+          date: string
+          description: string
+          doctor_name?: string | null
+          elderly_id: string
+          entry_type: Database["public"]["Enums"]["medical_entry_type"]
+          id?: string
+          location?: string | null
+          title: string
+        }
+        Update: {
+          attachments?: string[] | null
+          created_at?: string
+          date?: string
+          description?: string
+          doctor_name?: string | null
+          elderly_id?: string
+          entry_type?: Database["public"]["Enums"]["medical_entry_type"]
+          id?: string
+          location?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_history_elderly_id_fkey"
+            columns: ["elderly_id"]
+            isOneToOne: false
+            referencedRelation: "elderly_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medications: {
+        Row: {
+          active: boolean
+          created_at: string
+          dosage: string
+          elderly_id: string
+          frequency: string
+          id: string
+          name: string
+          notes: string | null
+          times: string[]
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          dosage: string
+          elderly_id: string
+          frequency: string
+          id?: string
+          name: string
+          notes?: string | null
+          times?: string[]
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          dosage?: string
+          elderly_id?: string
+          frequency?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          times?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medications_elderly_id_fkey"
+            columns: ["elderly_id"]
+            isOneToOne: false
+            referencedRelation: "elderly_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -44,15 +273,126 @@ export type Database = {
         }
         Relationships: []
       }
+      sos_alerts: {
+        Row: {
+          created_at: string
+          elderly_id: string
+          id: string
+          location: string | null
+          notes: string | null
+          resolved_at: string | null
+          status: Database["public"]["Enums"]["sos_status"]
+          triggered_by: string
+        }
+        Insert: {
+          created_at?: string
+          elderly_id: string
+          id?: string
+          location?: string | null
+          notes?: string | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["sos_status"]
+          triggered_by: string
+        }
+        Update: {
+          created_at?: string
+          elderly_id?: string
+          id?: string
+          location?: string | null
+          notes?: string | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["sos_status"]
+          triggered_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sos_alerts_elderly_id_fkey"
+            columns: ["elderly_id"]
+            isOneToOne: false
+            referencedRelation: "elderly_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sos_alerts_triggered_by_fkey"
+            columns: ["triggered_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          started_at: string
+          status: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          started_at?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_type?: Database["public"]["Enums"]["plan_type"]
+          started_at?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_plan: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["plan_type"]
+      }
+      has_active_subscription: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      medical_entry_type:
+        | "exam"
+        | "consultation"
+        | "hospital"
+        | "emergency"
+        | "other"
+      plan_type: "basic" | "pro"
+      sos_status: "pending" | "acknowledged" | "resolved"
+      subscription_status: "active" | "cancelled" | "expired"
+      task_type: "medication" | "feeding" | "hygiene" | "exercise" | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -179,6 +519,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      medical_entry_type: [
+        "exam",
+        "consultation",
+        "hospital",
+        "emergency",
+        "other",
+      ],
+      plan_type: ["basic", "pro"],
+      sos_status: ["pending", "acknowledged", "resolved"],
+      subscription_status: ["active", "cancelled", "expired"],
+      task_type: ["medication", "feeding", "hygiene", "exercise", "other"],
+    },
   },
 } as const
