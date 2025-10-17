@@ -151,12 +151,12 @@ const Pricing = () => {
                   className={cn(
                     "w-full group font-semibold",
                     "flex items-center justify-center",
-                    "px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8",
+                    "px-3 sm:px-4 md:px-6 lg:px-8",
                     "py-3 sm:py-3.5 md:py-4",
-                    "text-[10px] xs:text-xs sm:text-sm md:text-base",
+                    "text-sm sm:text-base md:text-lg",
                     "min-h-[48px] sm:min-h-[52px] md:min-h-[56px]",
                     "leading-tight",
-                    plan.popular && "lg:text-lg"
+                    plan.popular && "lg:text-xl"
                   )}
                   onClick={() => window.open('https://play.google.com', '_blank')}
                 >
