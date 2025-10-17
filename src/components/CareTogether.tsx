@@ -9,7 +9,7 @@ const CareTogether = () => {
             <img
               src={careTogetherImage}
               alt="Idoso e cuidador juntos, olhando confiantes para o futuro"
-              className="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover"
+              className="w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/60 to-transparent flex items-end">
               <div className="p-6 sm:p-8 md:p-12 w-full text-center animate-fade-in-up">
