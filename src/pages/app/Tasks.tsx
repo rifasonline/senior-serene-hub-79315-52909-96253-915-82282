@@ -607,7 +607,12 @@ export default function Tasks() {
             </div>
 
             <div className="flex justify-center pt-4">
-              <Button variant="outline" onClick={() => window.location.href = "/app/history"}>
+              <Button 
+                variant="outline" 
+                onClick={() => window.location.href = "/app/history"}
+                className="gap-2"
+              >
+                <Calendar className="h-4 w-4" />
                 Ver Histórico Completo
               </Button>
             </div>
