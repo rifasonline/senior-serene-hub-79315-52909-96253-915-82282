@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Check, Sparkles, ArrowRight, X, Bell, Activity, Video, FileText, Headset, Clock, Users, BookOpen, AlertCircle, Phone } from "lucide-react";
+import { Check, Sparkles, ArrowRight, X, Bell, Activity, Video, FileText, Headset, Clock, Users, BookOpen, AlertCircle, Phone, Calendar, BellRing, ClipboardList, Pill, FolderHeart, User, Contrast } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Pricing = () => {
@@ -11,20 +11,20 @@ const Pricing = () => {
       popular: false,
       description: "Ideal para começar a cuidar com organização e lembretes essenciais.",
       features: [
-        { name: "Agenda de medicamentos e compromissos médicos", included: true },
-        { name: "Lembretes automáticos de rotina", included: true },
-        { name: "Registro diário simples de tarefas", included: true },
-        { name: "Controle de medicamentos", included: true },
-        { name: "Histórico médico simples (consultas e exames)", included: true },
-        { name: "Perfil básico do idoso e do cuidador", included: true },
-        { name: "Interface acessível com alto contraste", included: true },
-        { name: "Histórico de 30 dias", included: true },
-        { name: "Botão de emergência", included: false },
-        { name: "Alertas de saúde inteligentes", included: false },
-        { name: "Monitoramento comportamental", included: false },
-        { name: "Telemedicina integrada", included: false },
-        { name: "Relatórios médicos em PDF", included: false },
-        { name: "Suporte prioritário", included: false },
+        { name: "Agenda de medicamentos e compromissos médicos", included: true, icon: Calendar },
+        { name: "Lembretes automáticos de rotina", included: true, icon: BellRing },
+        { name: "Registro diário simples de tarefas", included: true, icon: ClipboardList },
+        { name: "Controle de medicamentos", included: true, icon: Pill },
+        { name: "Histórico médico simples (consultas e exames)", included: true, icon: FolderHeart },
+        { name: "Perfil básico do idoso e do cuidador", included: true, icon: User },
+        { name: "Interface acessível com alto contraste", included: true, icon: Contrast },
+        { name: "Histórico de 30 dias", included: true, icon: Clock },
+        { name: "Botão de emergência", included: false, icon: AlertCircle },
+        { name: "Alertas de saúde inteligentes", included: false, icon: Bell },
+        { name: "Monitoramento comportamental", included: false, icon: Activity },
+        { name: "Telemedicina integrada", included: false, icon: Video },
+        { name: "Relatórios médicos em PDF", included: false, icon: FileText },
+        { name: "Suporte prioritário", included: false, icon: Headset },
       ],
     },
     {
@@ -213,26 +213,33 @@ const Pricing = () => {
                     <span className="text-base text-left mb-2 font-medium">
                       Recursos:
                     </span>
-                    {plan.features?.map((feature, index) => (
-                      <div key={index} className="flex items-center justify-start gap-3">
-                        <div className={cn(
-                          "flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0",
-                          feature.included ? "bg-secondary/10" : "bg-muted"
-                        )}>
-                          {feature.included ? (
-                            <Check className="w-4 h-4 text-secondary" />
-                          ) : (
-                            <X className="w-4 h-4 text-muted-foreground" />
-                          )}
+                    {plan.features?.map((feature, index) => {
+                      const FeatureIcon = feature.icon;
+                      return (
+                        <div key={index} className="flex items-center justify-start gap-3">
+                          <div className={cn(
+                            "flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0",
+                            feature.included ? "bg-secondary/10" : "bg-muted"
+                          )}>
+                            {feature.included && FeatureIcon ? (
+                              <FeatureIcon className="w-4 h-4 text-secondary" />
+                            ) : !feature.included && FeatureIcon ? (
+                              <FeatureIcon className="w-4 h-4 text-muted-foreground opacity-40" />
+                            ) : feature.included ? (
+                              <Check className="w-4 h-4 text-secondary" />
+                            ) : (
+                              <X className="w-4 h-4 text-muted-foreground" />
+                            )}
+                          </div>
+                          <span className={cn(
+                            "text-sm",
+                            feature.included ? "text-foreground" : "text-muted-foreground"
+                          )}>
+                            {feature.name}
+                          </span>
                         </div>
-                        <span className={cn(
-                          "text-sm",
-                          feature.included ? "text-foreground" : "text-muted-foreground"
-                        )}>
-                          {feature.name}
-                        </span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </>
                 )}
               </div>
