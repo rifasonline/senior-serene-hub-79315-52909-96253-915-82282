@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Check, Sparkles, ArrowRight, X } from "lucide-react";
+import { Check, Sparkles, ArrowRight, X, Bell, Activity, Video, FileText, Headset, Clock, Users, BookOpen, AlertCircle, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Pricing = () => {
@@ -36,17 +36,17 @@ const Pricing = () => {
       showBasicIncluded: true,
       basicSummary: "Tudo do Plano Básico",
       advancedFeatures: [
-        { name: "Botão de emergência", included: true },
-        { name: "Alertas de saúde inteligentes", included: true },
-        { name: "Monitoramento comportamental", included: true },
-        { name: "Atividades personalizadas", included: true },
-        { name: "Telemedicina integrada", included: true },
-        { name: "Relatórios médicos em PDF", included: true },
-        { name: "Atendimento preferencial", included: true },
-        { name: "Histórico ilimitado", included: true },
-        { name: "Múltiplos perfis de idosos", included: true },
-        { name: "Suporte prioritário por email", included: true },
-        { name: "Acesso a artigos e conteúdos premium", included: true },
+        { name: "Botão de emergência", included: true, icon: AlertCircle },
+        { name: "Alertas de saúde inteligentes", included: true, icon: Bell },
+        { name: "Monitoramento comportamental", included: true, icon: Activity },
+        { name: "Atividades personalizadas", included: true, icon: Sparkles },
+        { name: "Telemedicina integrada", included: true, icon: Video },
+        { name: "Relatórios médicos em PDF", included: true, icon: FileText },
+        { name: "Atendimento preferencial", included: true, icon: Phone },
+        { name: "Histórico ilimitado", included: true, icon: Clock },
+        { name: "Múltiplos perfis de idosos", included: true, icon: Users },
+        { name: "Suporte prioritário por email", included: true, icon: Headset },
+        { name: "Acesso a artigos e conteúdos premium", included: true, icon: BookOpen },
       ],
     },
   ];
@@ -182,26 +182,31 @@ const Pricing = () => {
                     <span className="text-base text-left mb-3 font-bold text-foreground">
                       Recursos Avançados Exclusivos:
                     </span>
-                    {plan.advancedFeatures?.map((feature, index) => (
-                      <div key={index} className="flex items-center justify-start gap-3">
-                        <div className={cn(
-                          "flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0",
-                          feature.included ? "bg-secondary/10" : "bg-muted"
-                        )}>
-                          {feature.included ? (
-                            <Check className="w-4 h-4 text-secondary" />
-                          ) : (
-                            <X className="w-4 h-4 text-muted-foreground" />
-                          )}
+                    {plan.advancedFeatures?.map((feature, index) => {
+                      const FeatureIcon = feature.icon;
+                      return (
+                        <div key={index} className="flex items-center justify-start gap-3">
+                          <div className={cn(
+                            "flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0",
+                            feature.included ? "bg-secondary/10" : "bg-muted"
+                          )}>
+                            {feature.included && FeatureIcon ? (
+                              <FeatureIcon className="w-4 h-4 text-secondary" />
+                            ) : feature.included ? (
+                              <Check className="w-4 h-4 text-secondary" />
+                            ) : (
+                              <X className="w-4 h-4 text-muted-foreground" />
+                            )}
+                          </div>
+                          <span className={cn(
+                            "text-sm",
+                            feature.included ? "text-foreground font-medium" : "text-muted-foreground"
+                          )}>
+                            {feature.name}
+                          </span>
                         </div>
-                        <span className={cn(
-                          "text-sm",
-                          feature.included ? "text-foreground font-medium" : "text-muted-foreground"
-                        )}>
-                          {feature.name}
-                        </span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </>
                 ) : (
                   <>
