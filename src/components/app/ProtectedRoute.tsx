@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -11,6 +11,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children, requireSubscription = true }: ProtectedRouteProps) => {
+  const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const subscription = useSubscription(user);
@@ -47,7 +48,7 @@ export const ProtectedRoute = ({ children, requireSubscription = true }: Protect
 
   // Not authenticated - redirect to login
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/auth" state={{ from: location.pathname }} replace />;
   }
 
   // Authenticated but no subscription required - allow access
