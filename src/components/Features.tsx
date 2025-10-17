@@ -1,4 +1,4 @@
-import { Calendar, Bell, Activity } from "lucide-react";
+import { Calendar, Bell, Activity, HeartPulse } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import agendaImage from "@/assets/feature-agenda.jpg";
 import alertsImage from "@/assets/feature-alerts.jpg";
@@ -14,7 +14,7 @@ const Features = () => {
       color: "primary",
     },
     {
-      icon: Bell,
+      icon: HeartPulse,
       title: "Alertas de Saúde",
       description: "Monitoramento contínuo de condições médicas e alertas sobre mudanças de comportamento e estado emocional.",
       image: alertsImage,
