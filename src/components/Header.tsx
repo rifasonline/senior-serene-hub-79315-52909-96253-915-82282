@@ -58,8 +58,20 @@ const Header = () => {
   };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Error signing out:", error);
+      }
+      // Clear local storage
+      localStorage.clear();
+      // Force reload to clear all state
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Unexpected error during sign out:", error);
+      // Force redirect anyway
+      window.location.href = "/";
+    }
   };
 
   return (
