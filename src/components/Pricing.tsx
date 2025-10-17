@@ -151,18 +151,19 @@ const Pricing = () => {
                   className={cn(
                     "w-full group font-semibold",
                     "flex items-center justify-center",
-                    "px-3 sm:px-4 md:px-6 lg:px-8",
-                    "py-2.5 sm:py-3 md:py-3.5",
-                    "text-xs sm:text-sm md:text-base",
-                    "min-h-[44px] sm:min-h-[48px] md:min-h-[52px]",
+                    "px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8",
+                    "py-3 sm:py-3.5 md:py-4",
+                    "text-[10px] xs:text-xs sm:text-sm md:text-base",
+                    "min-h-[48px] sm:min-h-[52px] md:min-h-[56px]",
+                    "leading-tight",
                     plan.popular && "lg:text-lg"
                   )}
                   onClick={() => window.open('https://play.google.com', '_blank')}
                 >
                   {plan.popular ? (
                     <>
-                      <Sparkles className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 flex-shrink-0" />
-                      <span className="whitespace-nowrap">Assinar Plano Pro - R$49,90</span>
+                      <Sparkles className="mr-1 sm:mr-1.5 md:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 flex-shrink-0" />
+                      <span className="whitespace-nowrap text-center">Assinar Plano Pro - R$49,90</span>
                     </>
                   ) : (
                     <>
