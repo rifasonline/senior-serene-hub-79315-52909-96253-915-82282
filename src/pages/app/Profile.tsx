@@ -372,22 +372,47 @@ export default function Profile() {
         return;
       }
 
-      // Criar preview local
+      // Criar preview local imediatamente
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfile(prev => prev ? { ...prev, avatar_url: reader.result as string } : null);
       };
       reader.readAsDataURL(file);
 
+      // Fazer upload para o Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Obter URL pública
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+
+      // Atualizar no banco de dados
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrl })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      setProfile(prev => prev ? { ...prev, avatar_url: publicUrl } : null);
+
       toast({
         title: "Avatar atualizado",
-        description: "Sua foto foi atualizada com sucesso.",
+        description: "Sua foto foi salva com sucesso.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading avatar:", error);
       toast({
         title: "Erro ao fazer upload",
-        description: "Não foi possível atualizar o avatar.",
+        description: error.message || "Não foi possível atualizar o avatar.",
         variant: "destructive",
       });
     }
