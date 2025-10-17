@@ -71,6 +71,31 @@ const Auth = () => {
     const cleanCpf = cpf.replace(/\D/g, '');
     const cleanPhone = phone.replace(/\D/g, '');
 
+    // Validate CPF with BrasilAPI
+    try {
+      const { data: cpfValidation, error: cpfError } = await supabase.functions.invoke('validate-cpf', {
+        body: { cpf: cleanCpf }
+      });
+
+      if (cpfError || !cpfValidation?.valid) {
+        setLoading(false);
+        toast({
+          variant: "destructive",
+          title: "CPF inválido",
+          description: cpfValidation?.error || "Este CPF não foi encontrado na base da Receita Federal",
+        });
+        return;
+      }
+    } catch (error) {
+      setLoading(false);
+      toast({
+        variant: "destructive",
+        title: "Erro ao validar CPF",
+        description: "Não foi possível validar o CPF. Tente novamente.",
+      });
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
