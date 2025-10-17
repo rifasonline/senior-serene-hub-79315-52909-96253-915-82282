@@ -108,7 +108,7 @@ const Header = () => {
                 <Button 
                   variant="default" 
                   size="lg"
-                  onClick={() => navigate("/app")}
+                  onClick={() => navigate("/app/dashboard")}
                 >
                   <LayoutDashboard className="w-4 h-4 mr-2" />
                   Dashboard
@@ -196,7 +196,7 @@ const Header = () => {
                       size="lg" 
                       className="w-full"
                       onClick={() => {
-                        navigate("/app");
+                        navigate("/app/dashboard");
                         setIsOpen(false);
                       }}
                     >
