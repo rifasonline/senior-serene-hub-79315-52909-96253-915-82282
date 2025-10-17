@@ -150,19 +150,19 @@ const Pricing = () => {
                   size="lg"
                   className={cn(
                     "w-full group font-semibold",
-                    plan.popular && "text-lg"
+                    plan.popular && "text-base md:text-lg"
                   )}
                   onClick={() => window.open('https://play.google.com', '_blank')}
                 >
                   {plan.popular ? (
                     <>
-                      <Sparkles className="mr-2 h-5 w-5" />
-                      Assinar Plano Pro
+                      <Sparkles className="mr-2 h-4 w-4 md:h-5 md:w-5 flex-shrink-0" />
+                      <span className="truncate">Assinar Plano Pro</span>
                     </>
                   ) : (
                     "Começar Agora"
                   )}
-                  <ArrowRight className="ml-2 h-5 w-5 transition-smooth group-hover:translate-x-1" />
+                  <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 transition-smooth group-hover:translate-x-1 flex-shrink-0" />
                 </Button>
               </div>
 
