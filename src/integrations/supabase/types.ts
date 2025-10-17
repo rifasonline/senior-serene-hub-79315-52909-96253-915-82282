@@ -63,34 +63,46 @@ export type Database = {
           completed: boolean
           completed_at: string | null
           created_at: string
+          deadline: string | null
           description: string
           elderly_id: string
           id: string
           notes: string | null
+          priority: Database["public"]["Enums"]["task_priority"]
           scheduled_time: string
+          status: Database["public"]["Enums"]["task_status"]
           task_type: Database["public"]["Enums"]["task_type"]
+          title: string
         }
         Insert: {
           completed?: boolean
           completed_at?: string | null
           created_at?: string
+          deadline?: string | null
           description: string
           elderly_id: string
           id?: string
           notes?: string | null
+          priority?: Database["public"]["Enums"]["task_priority"]
           scheduled_time: string
+          status?: Database["public"]["Enums"]["task_status"]
           task_type: Database["public"]["Enums"]["task_type"]
+          title?: string
         }
         Update: {
           completed?: boolean
           completed_at?: string | null
           created_at?: string
+          deadline?: string | null
           description?: string
           elderly_id?: string
           id?: string
           notes?: string | null
+          priority?: Database["public"]["Enums"]["task_priority"]
           scheduled_time?: string
+          status?: Database["public"]["Enums"]["task_status"]
           task_type?: Database["public"]["Enums"]["task_type"]
+          title?: string
         }
         Relationships: [
           {
@@ -439,6 +451,8 @@ export type Database = {
       plan_type: "basic" | "pro"
       sos_status: "pending" | "acknowledged" | "resolved"
       subscription_status: "active" | "cancelled" | "expired"
+      task_priority: "low" | "medium" | "high"
+      task_status: "pending" | "in_progress" | "completed"
       task_type: "medication" | "feeding" | "hygiene" | "exercise" | "other"
     }
     CompositeTypes: {
@@ -578,6 +592,8 @@ export const Constants = {
       plan_type: ["basic", "pro"],
       sos_status: ["pending", "acknowledged", "resolved"],
       subscription_status: ["active", "cancelled", "expired"],
+      task_priority: ["low", "medium", "high"],
+      task_status: ["pending", "in_progress", "completed"],
       task_type: ["medication", "feeding", "hygiene", "exercise", "other"],
     },
   },
