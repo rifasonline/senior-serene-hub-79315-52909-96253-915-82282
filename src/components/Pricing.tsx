@@ -149,20 +149,20 @@ const Pricing = () => {
                   variant={plan.popular ? "hero" : "default"}
                   size="lg"
                   className={cn(
-                    "w-full group font-semibold px-3 md:px-6",
-                    plan.popular && "text-sm md:text-lg"
+                    "w-full group font-semibold px-2 md:px-6 text-xs sm:text-sm",
+                    plan.popular && "md:text-lg"
                   )}
                   onClick={() => window.open('https://play.google.com', '_blank')}
                 >
                   {plan.popular ? (
                     <>
-                      <Sparkles className="mr-1 md:mr-2 h-4 w-4 md:h-5 md:w-5 flex-shrink-0" />
+                      <Sparkles className="mr-1 md:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 flex-shrink-0" />
                       <span className="truncate">Assinar Plano Pro</span>
                     </>
                   ) : (
                     "Começar Agora"
                   )}
-                  <ArrowRight className="ml-1 md:ml-2 h-4 w-4 md:h-5 md:w-5 transition-smooth group-hover:translate-x-1 flex-shrink-0" />
+                  <ArrowRight className="ml-1 md:ml-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 transition-smooth group-hover:translate-x-1 flex-shrink-0" />
                 </Button>
               </div>
 
