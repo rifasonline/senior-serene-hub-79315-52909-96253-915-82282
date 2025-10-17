@@ -5,6 +5,9 @@ const CareTogether = () => {
     <section className="py-20 bg-gradient-subtle">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-foreground mb-8 sm:mb-12">
+            Cuidar com amor, viver com dignidade
+          </h2>
           <div className="relative overflow-hidden rounded-2xl border-2 border-primary/30">
             <img
               src={careTogetherImage}
