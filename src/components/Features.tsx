@@ -1,8 +1,9 @@
-import { Calendar, Bell, Activity, HeartPulse } from "lucide-react";
+import { Calendar, Bell, Activity, HeartPulse, Video } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import agendaImage from "@/assets/feature-agenda.jpg";
 import alertsImage from "@/assets/feature-alerts.jpg";
 import activitiesImage from "@/assets/feature-activities.jpg";
+import telemedicineImage from "@/assets/feature-telemedicine.jpg";
 
 const Features = () => {
   const features = [
@@ -27,6 +28,13 @@ const Features = () => {
       image: activitiesImage,
       color: "secondary",
     },
+    {
+      icon: Video,
+      title: "Telemedicina Integrada",
+      description: "Consultas médicas por vídeo com profissionais de saúde direto do aplicativo, sem sair de casa.",
+      image: telemedicineImage,
+      color: "primary",
+    },
   ];
 
   return (
@@ -42,7 +50,7 @@ const Features = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
             <Card 
               key={index} 
