@@ -14,6 +14,7 @@ const CareTogether = () => {
               alt="Idoso e cuidador juntos, olhando confiantes para o futuro"
               className="w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] object-cover"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-white/20 via-transparent to-white/10 pointer-events-none"></div>
           </div>
         </div>
       </div>
