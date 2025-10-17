@@ -95,7 +95,7 @@ const Testimonials = () => {
                 key={index}
                 className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
               >
-                <Card className="p-6 shadow-card hover:shadow-elegant transition-all duration-300 h-full border-border bg-card/80 backdrop-blur-sm">
+                <Card className="p-6 shadow-card hover:shadow-elegant transition-all duration-300 h-full border-2 border-primary/30 bg-card/80 backdrop-blur-sm">
                   <div className="flex items-center gap-3 mb-4">
                     {testimonial.image ? (
                       <img 
