@@ -115,22 +115,13 @@ const Header = () => {
                 </Button>
               </>
             ) : (
-              <>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  onClick={() => navigate("/auth")}
-                >
-                  Entrar
-                </Button>
-                <Button 
-                  variant="default" 
-                  size="lg"
-                  onClick={() => window.open('https://play.google.com', '_blank')}
-                >
-                  Baixar App
-                </Button>
-              </>
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => navigate("/auth")}
+              >
+                Entrar
+              </Button>
             )}
           </div>
 
@@ -187,7 +178,7 @@ const Header = () => {
                 )
               ))}
               <div className="pt-2 space-y-2">
-                {user ? (
+                {user && (
                   <>
                     <div className="px-4 py-2 text-sm text-muted-foreground">
                       {user.email}
@@ -203,31 +194,6 @@ const Header = () => {
                     >
                       <LogOut className="w-4 h-4 mr-2" />
                       Sair
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button 
-                      variant="outline" 
-                      size="lg" 
-                      className="w-full"
-                      onClick={() => {
-                        navigate("/auth");
-                        setIsOpen(false);
-                      }}
-                    >
-                      Entrar
-                    </Button>
-                    <Button 
-                      variant="default" 
-                      size="lg" 
-                      className="w-full"
-                      onClick={() => {
-                        window.open('https://play.google.com', '_blank');
-                        setIsOpen(false);
-                      }}
-                    >
-                      Baixar App
                     </Button>
                   </>
                 )}

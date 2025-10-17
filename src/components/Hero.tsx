@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 import { useCountUp } from "@/hooks/useCountUp";
 
@@ -41,15 +41,6 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <Button 
                 variant="hero" 
-                size="lg" 
-                className="group"
-                onClick={() => window.open('https://play.google.com', '_blank')}
-              >
-                Baixar Aplicativo
-                <Download className="ml-2 h-5 w-5 transition-smooth group-hover:translate-y-1" />
-              </Button>
-              <Button 
-                variant="outline" 
                 size="lg" 
                 className="group"
                 onClick={() => {
