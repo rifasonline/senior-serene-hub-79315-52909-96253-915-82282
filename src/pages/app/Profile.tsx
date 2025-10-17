@@ -11,7 +11,8 @@ import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "next-themes";
-import { User, Mail, Phone, Lock, Upload, Crown, Check } from "lucide-react";
+import { User, Mail, Phone, Lock, Upload, Crown, Check, Users, Pencil, Trash2, Calendar } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 
 interface Profile {
@@ -28,6 +29,17 @@ interface Subscription {
   expires_at: string | null;
 }
 
+interface ElderlyProfile {
+  id: string;
+  name: string;
+  birth_date: string;
+  photo_url: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  medical_conditions: string[] | null;
+  allergies: string[] | null;
+}
+
 export default function Profile() {
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -38,6 +50,9 @@ export default function Profile() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [elderlyProfiles, setElderlyProfiles] = useState<ElderlyProfile[]>([]);
+  const [isElderlyDialogOpen, setIsElderlyDialogOpen] = useState(false);
+  const [editingElderly, setEditingElderly] = useState<ElderlyProfile | null>(null);
   
   const [formData, setFormData] = useState({
     full_name: "",
@@ -56,6 +71,13 @@ export default function Profile() {
     showTutorials: true,
   });
 
+  const [elderlyForm, setElderlyForm] = useState({
+    name: "",
+    birth_date: "",
+    emergency_contact_name: "",
+    emergency_contact_phone: "",
+  });
+
   useEffect(() => {
     checkAuth();
   }, []);
@@ -72,6 +94,7 @@ export default function Profile() {
       setUser(user);
       await fetchProfile(user.id);
       await fetchSubscription(user.id);
+      await fetchElderlyProfiles(user.id);
     } catch (error) {
       console.error("Error checking auth:", error);
       navigate("/auth");
@@ -118,6 +141,145 @@ export default function Profile() {
       console.error("Error fetching subscription:", error);
       setSubscription({ plan_type: "basic", status: "active", expires_at: null });
     }
+  };
+
+  const fetchElderlyProfiles = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("elderly_profiles")
+        .select("*")
+        .eq("caregiver_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      setElderlyProfiles(data || []);
+    } catch (error) {
+      console.error("Error fetching elderly profiles:", error);
+    }
+  };
+
+  const handleSaveElderly = async () => {
+    try {
+      if (!elderlyForm.name || !elderlyForm.birth_date) {
+        toast({
+          title: "Campos obrigatórios",
+          description: "Por favor, preencha nome e data de nascimento.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const isPro = subscription?.plan_type === "pro";
+      if (!isPro && elderlyProfiles.length >= 2 && !editingElderly) {
+        toast({
+          title: "Limite atingido",
+          description: "Plano Básico permite até 2 perfis. Faça upgrade para Pro.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (editingElderly) {
+        const { error } = await supabase
+          .from("elderly_profiles")
+          .update({
+            name: elderlyForm.name,
+            birth_date: elderlyForm.birth_date,
+            emergency_contact_name: elderlyForm.emergency_contact_name || null,
+            emergency_contact_phone: elderlyForm.emergency_contact_phone || null,
+          })
+          .eq("id", editingElderly.id);
+
+        if (error) throw error;
+
+        toast({
+          title: "Perfil atualizado",
+          description: "As informações do idoso foram atualizadas.",
+        });
+      } else {
+        const { error } = await supabase
+          .from("elderly_profiles")
+          .insert({
+            caregiver_id: user.id,
+            name: elderlyForm.name,
+            birth_date: elderlyForm.birth_date,
+            emergency_contact_name: elderlyForm.emergency_contact_name || null,
+            emergency_contact_phone: elderlyForm.emergency_contact_phone || null,
+          });
+
+        if (error) throw error;
+
+        toast({
+          title: "Perfil criado",
+          description: "Novo perfil de idoso adicionado com sucesso.",
+        });
+      }
+
+      await fetchElderlyProfiles(user.id);
+      setIsElderlyDialogOpen(false);
+      setElderlyForm({ name: "", birth_date: "", emergency_contact_name: "", emergency_contact_phone: "" });
+      setEditingElderly(null);
+    } catch (error: any) {
+      console.error("Error saving elderly profile:", error);
+      toast({
+        title: "Erro ao salvar",
+        description: error.message || "Não foi possível salvar o perfil.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteElderly = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("elderly_profiles")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Perfil removido",
+        description: "O perfil do idoso foi removido com sucesso.",
+      });
+
+      await fetchElderlyProfiles(user.id);
+    } catch (error: any) {
+      console.error("Error deleting elderly profile:", error);
+      toast({
+        title: "Erro ao remover",
+        description: error.message || "Não foi possível remover o perfil.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const openElderlyDialog = (elderly?: ElderlyProfile) => {
+    if (elderly) {
+      setEditingElderly(elderly);
+      setElderlyForm({
+        name: elderly.name,
+        birth_date: elderly.birth_date,
+        emergency_contact_name: elderly.emergency_contact_name || "",
+        emergency_contact_phone: elderly.emergency_contact_phone || "",
+      });
+    } else {
+      setEditingElderly(null);
+      setElderlyForm({ name: "", birth_date: "", emergency_contact_name: "", emergency_contact_phone: "" });
+    }
+    setIsElderlyDialogOpen(true);
+  };
+
+  const calculateAge = (birthDate: string) => {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
   };
 
   const handleSaveProfile = async () => {
@@ -587,11 +749,181 @@ export default function Profile() {
                       </Button>
                     </div>
                   </>
-                )}
+                 )}
               </CardContent>
             </Card>
           </div>
         </div>
+
+        {/* Section 4: Elderly Profiles */}
+        <div className="mt-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-primary" />
+                    Perfis de Idosos
+                  </CardTitle>
+                  <CardDescription>
+                    Adicione informações sobre os idosos que você acompanha
+                  </CardDescription>
+                </div>
+                <Button onClick={() => openElderlyDialog()} className="gap-2">
+                  <Users className="h-4 w-4" />
+                  Adicionar Idoso
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {elderlyProfiles.length === 0 ? (
+                <div className="text-center py-12">
+                  <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground mb-4">
+                    Nenhum perfil de idoso cadastrado ainda
+                  </p>
+                  <Button onClick={() => openElderlyDialog()} variant="outline">
+                    Adicionar Primeiro Perfil
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {elderlyProfiles.map((elderly) => (
+                    <Card key={elderly.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <Avatar className="h-12 w-12">
+                            <AvatarImage src={elderly.photo_url || ""} />
+                            <AvatarFallback className="bg-primary/10 text-primary">
+                              {elderly.name.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-sm truncate">{elderly.name}</h4>
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                              <Calendar className="h-3 w-3" />
+                              <span>{calculateAge(elderly.birth_date)} anos</span>
+                            </div>
+                            {elderly.emergency_contact_name && (
+                              <p className="text-xs text-muted-foreground mt-1 truncate">
+                                Contato: {elderly.emergency_contact_name}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-2 mt-3">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 gap-1"
+                            onClick={() => openElderlyDialog(elderly)}
+                          >
+                            <Pencil className="h-3 w-3" />
+                            Editar
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="gap-1 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                            onClick={() => {
+                              if (confirm(`Tem certeza que deseja remover o perfil de ${elderly.name}?`)) {
+                                handleDeleteElderly(elderly.id);
+                              }
+                            }}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+
+              {!isPro && elderlyProfiles.length > 0 && (
+                <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                  <p className="text-sm text-muted-foreground">
+                    💡 Você está usando {elderlyProfiles.length} de 2 perfis disponíveis no plano Básico.
+                    {elderlyProfiles.length >= 2 && " Faça upgrade para Pro e tenha perfis ilimitados!"}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Elderly Dialog */}
+        <Dialog open={isElderlyDialogOpen} onOpenChange={setIsElderlyDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>
+                {editingElderly ? "Editar Perfil do Idoso" : "Adicionar Perfil do Idoso"}
+              </DialogTitle>
+              <DialogDescription>
+                Preencha as informações básicas sobre o idoso
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="elderly_name">Nome Completo *</Label>
+                <Input
+                  id="elderly_name"
+                  value={elderlyForm.name}
+                  onChange={(e) => setElderlyForm({ ...elderlyForm, name: e.target.value })}
+                  placeholder="Nome do idoso"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="elderly_birth_date">Data de Nascimento *</Label>
+                <Input
+                  id="elderly_birth_date"
+                  type="date"
+                  value={elderlyForm.birth_date}
+                  onChange={(e) => setElderlyForm({ ...elderlyForm, birth_date: e.target.value })}
+                />
+              </div>
+
+              <Separator />
+
+              <div className="space-y-2">
+                <Label htmlFor="emergency_contact_name">Contato de Emergência</Label>
+                <Input
+                  id="emergency_contact_name"
+                  value={elderlyForm.emergency_contact_name}
+                  onChange={(e) => setElderlyForm({ ...elderlyForm, emergency_contact_name: e.target.value })}
+                  placeholder="Nome do contato"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="emergency_contact_phone">Telefone de Emergência</Label>
+                <Input
+                  id="emergency_contact_phone"
+                  type="tel"
+                  value={elderlyForm.emergency_contact_phone}
+                  onChange={(e) => setElderlyForm({ ...elderlyForm, emergency_contact_phone: e.target.value })}
+                  placeholder="(00) 00000-0000"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsElderlyDialogOpen(false);
+                  setElderlyForm({ name: "", birth_date: "", emergency_contact_name: "", emergency_contact_phone: "" });
+                  setEditingElderly(null);
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button onClick={handleSaveElderly}>
+                {editingElderly ? "Atualizar" : "Adicionar"}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
