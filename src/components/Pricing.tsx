@@ -74,7 +74,7 @@ const Pricing = () => {
               className={cn(
                 "flex flex-col relative rounded-2xl lg:rounded-3xl transition-all bg-card items-start w-full border overflow-hidden",
                 plan.popular 
-                  ? "md:scale-[1.15] border-2 border-primary shadow-elegant z-10 mt-4" 
+                  ? "md:scale-[1.15] border-2 border-primary shadow-elegant z-10" 
                   : "border-border shadow-card hover:shadow-soft"
               )}
             >
