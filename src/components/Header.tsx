@@ -1,13 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 import logo from "@/assets/logo-main.png";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const navItems = [
     { name: "Início", path: "/" },
@@ -36,6 +55,11 @@ const Header = () => {
         }, 100);
       }
     }
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
   };
 
   return (
@@ -74,15 +98,40 @@ const Header = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Button 
-              variant="default" 
-              size="lg"
-              onClick={() => window.open('https://play.google.com', '_blank')}
-            >
-              Baixar App
-            </Button>
+          {/* CTA Buttons */}
+          <div className="hidden md:flex md:items-center md:gap-3">
+            {user ? (
+              <>
+                <span className="text-sm text-muted-foreground">
+                  Olá, {user.email}
+                </span>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => navigate("/auth")}
+                >
+                  Entrar
+                </Button>
+                <Button 
+                  variant="default" 
+                  size="lg"
+                  onClick={() => window.open('https://play.google.com', '_blank')}
+                >
+                  Baixar App
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -125,18 +174,51 @@ const Header = () => {
                   </Link>
                 )
               ))}
-              <div className="pt-2">
-                <Button 
-                  variant="default" 
-                  size="lg" 
-                  className="w-full"
-                  onClick={() => {
-                    window.open('https://play.google.com', '_blank');
-                    setIsOpen(false);
-                  }}
-                >
-                  Baixar App
-                </Button>
+              <div className="pt-2 space-y-2">
+                {user ? (
+                  <>
+                    <div className="px-4 py-2 text-sm text-muted-foreground">
+                      {user.email}
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="w-full"
+                      onClick={() => {
+                        handleSignOut();
+                        setIsOpen(false);
+                      }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sair
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="w-full"
+                      onClick={() => {
+                        navigate("/auth");
+                        setIsOpen(false);
+                      }}
+                    >
+                      Entrar
+                    </Button>
+                    <Button 
+                      variant="default" 
+                      size="lg" 
+                      className="w-full"
+                      onClick={() => {
+                        window.open('https://play.google.com', '_blank');
+                        setIsOpen(false);
+                      }}
+                    >
+                      Baixar App
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
