@@ -2,7 +2,7 @@ import careTogetherImage from "@/assets/care-together.jpg";
 import { useCountUp } from "@/hooks/useCountUp";
 
 const CareTogether = () => {
-  const { count: users, ref: usersRef } = useCountUp({ end: 1000, duration: 2500 });
+  const { count: users, ref: usersRef } = useCountUp({ end: 1159, duration: 2500 });
   return (
     <section className="py-20 bg-gradient-subtle">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,7 +25,7 @@ const CareTogether = () => {
                 +{users}
               </span>
               <span className="text-lg sm:text-xl text-muted-foreground">
-                usuários usam os nossos serviços
+                famílias confiam em nossos cuidados diariamente
               </span>
             </div>
           </div>
