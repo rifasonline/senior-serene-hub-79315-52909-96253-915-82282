@@ -772,7 +772,7 @@ export default function Profile() {
 
                       <Button 
                         className="w-full gradient-primary"
-                        onClick={() => navigate("/pricing")}
+                        onClick={() => window.open('https://pay.cakto.com.br/yd5xq6j_612646', '_blank')}
                       >
                         <Crown className="h-4 w-4 mr-2" />
                         Fazer Upgrade para Pro
