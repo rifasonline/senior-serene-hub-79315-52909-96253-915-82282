@@ -202,10 +202,40 @@ export function PremiumArticles({
                 <DialogTitle className="text-2xl">{selectedArticle.title}</DialogTitle>
                 <DialogDescription className="text-base">{selectedArticle.summary}</DialogDescription>
               </DialogHeader>
-              <div className="prose prose-sm dark:prose-invert max-w-none mt-4">
-                {selectedArticle.content.split('\n').map((paragraph, index) => <p key={index} className="mb-3 whitespace-pre-line">
-                    {paragraph}
-                  </p>)}
+              <div className="prose prose-lg dark:prose-invert max-w-none mt-6">
+                {selectedArticle.content.split('\n\n').map((section, index) => {
+                  // Check if it's a heading (lines that end with :)
+                  if (section.trim().endsWith(':')) {
+                    return (
+                      <h3 key={index} className="text-xl font-semibold mt-6 mb-3 text-primary flex items-center gap-2">
+                        <span className="text-2xl">✨</span>
+                        {section.trim()}
+                      </h3>
+                    );
+                  }
+                  
+                  // Check if it's a list item (starts with - or •)
+                  if (section.trim().startsWith('-') || section.trim().startsWith('•')) {
+                    const items = section.split('\n').filter(item => item.trim());
+                    return (
+                      <ul key={index} className="space-y-2 my-4 ml-4">
+                        {items.map((item, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <span className="text-primary mt-1">💚</span>
+                            <span className="flex-1 leading-relaxed">{item.replace(/^[-•]\s*/, '')}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    );
+                  }
+                  
+                  // Regular paragraphs
+                  return (
+                    <p key={index} className="mb-4 leading-relaxed text-base text-foreground/90">
+                      {section.trim()}
+                    </p>
+                  );
+                })}
               </div>
             </>}
         </DialogContent>
