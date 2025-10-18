@@ -114,10 +114,14 @@ const Pricing = () => {
                     className="absolute -top-3 left-1/2 -translate-x-1/2 z-20"
                   >
                     {plan.badge && (
-                      <div className="px-5 py-2 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-soft">
-                        <span className="text-xs font-bold text-accent-foreground whitespace-nowrap">
-                          {plan.badge}
-                        </span>
+                      <div className="px-6 py-2.5 rounded-full bg-gradient-to-r from-accent via-accent/90 to-accent backdrop-blur-sm border-2 border-white/40 shadow-elegant hover-scale">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-accent-foreground animate-pulse" />
+                          <span className="text-sm font-bold text-accent-foreground whitespace-nowrap tracking-wide">
+                            {plan.badge}
+                          </span>
+                          <Sparkles className="w-4 h-4 text-accent-foreground animate-pulse" style={{ animationDelay: '0.5s' }} />
+                        </div>
                       </div>
                     )}
                   </motion.div>
