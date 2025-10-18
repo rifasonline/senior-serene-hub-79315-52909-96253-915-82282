@@ -51,7 +51,7 @@ export default function Agenda() {
   const [viewMode, setViewMode] = useState<ViewMode>('calendar');
   const [filterMode, setFilterMode] = useState<FilterMode>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
 
@@ -298,9 +298,11 @@ export default function Agenda() {
   const filteredAppointments = getFilteredAppointments();
 
   // Get appointments for selected date
-  const appointmentsForSelectedDate = appointments.filter(apt =>
-    isSameDay(new Date(apt.appointment_date), selectedDate)
-  );
+  const appointmentsForSelectedDate = selectedDate 
+    ? appointments.filter(apt =>
+        isSameDay(new Date(apt.appointment_date), selectedDate)
+      )
+    : [];
 
   // Get dates with appointments
   const datesWithAppointments = appointments.map(apt => new Date(apt.appointment_date));
@@ -565,7 +567,7 @@ export default function Agenda() {
                 <Card>
                   <CardHeader>
                     <CardTitle>
-                      {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
+                      {selectedDate ? format(selectedDate, "dd 'de' MMMM", { locale: ptBR }) : 'Selecione uma data'}
                     </CardTitle>
                     <CardDescription>
                       {appointmentsForSelectedDate.length} evento(s)
