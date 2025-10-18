@@ -20,14 +20,7 @@ const CallToAction = () => {
             </p>
             
             <div className="flex justify-center">
-              <Button variant="outline" size="lg" onClick={() => {
-              const pricingSection = document.getElementById('pricing');
-              if (pricingSection) {
-                pricingSection.scrollIntoView({
-                  behavior: 'smooth'
-                });
-              }
-            }} className="bg-white/10 text-white hover:bg-white/20 border-2 border-white/30 hover:border-white shadow-card group backdrop-blur-sm text-lg font-normal rounded-3xl">
+              <Button variant="outline" size="lg" onClick={() => window.open('https://pay.cakto.com.br/yd5xq6j_612646', '_blank')} className="bg-white/10 text-white hover:bg-white/20 border-2 border-white/30 hover:border-white shadow-card group backdrop-blur-sm text-lg font-normal rounded-3xl">
                 Assinar Plano Pro - R$49,90
                 <ArrowRight className="ml-2 h-5 w-5 transition-smooth group-hover:translate-x-1" />
               </Button>

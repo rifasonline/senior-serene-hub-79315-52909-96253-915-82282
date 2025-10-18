@@ -158,7 +158,7 @@ const Pricing = () => {
                     "leading-tight",
                     plan.popular && "lg:text-xl"
                   )}
-                  onClick={() => window.open('https://play.google.com', '_blank')}
+                  onClick={() => window.open(plan.popular ? 'https://pay.cakto.com.br/yd5xq6j_612646' : 'https://pay.cakto.com.br/34vi36u_612634', '_blank')}
                 >
                   {plan.popular ? (
                     <>
