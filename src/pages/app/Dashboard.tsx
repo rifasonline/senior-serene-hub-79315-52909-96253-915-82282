@@ -327,8 +327,8 @@ export default function Dashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={() => navigate('/#pricing')}>
-                Ver Planos
+              <Button onClick={() => window.open('https://pay.cakto.com.br/yd5xq6j_612646', '_blank')}>
+                Assinar Plano Pro
               </Button>
             </CardContent>
           </Card>}
