@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Index from "./pages/Index";
@@ -21,6 +22,9 @@ import Tasks from "./pages/app/Tasks";
 import History from "./pages/app/History";
 import Profile from "./pages/app/Profile";
 import Onboarding from "./pages/app/Onboarding";
+import { EmergencyButton } from "./components/app/EmergencyButton";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +32,21 @@ const AppContent = () => {
   const location = useLocation();
   const isAuthPage = location.pathname === "/auth";
   const isAppPage = location.pathname.startsWith("/app");
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -80,6 +99,7 @@ const AppContent = () => {
         </Routes>
       </main>
       {!isAuthPage && !isAppPage && <Footer />}
+      {isAppPage && <EmergencyButton user={user} />}
     </div>
   );
 };
