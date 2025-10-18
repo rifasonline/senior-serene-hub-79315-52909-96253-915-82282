@@ -115,17 +115,15 @@ const Pricing = () => {
         >
           {plan.badge && (
             <div className="relative">
-              {/* Glow animado ao redor */}
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-lg opacity-70 animate-pulse"></div>
+              {/* Glow suave ao redor */}
+              <div className="absolute inset-0 bg-primary/30 blur-lg opacity-60"></div>
               
               {/* Badge principal */}
-              <div className="relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 backdrop-blur-sm border-2 border-white/60 shadow-elegant">
-                <div className="flex items-center justify-center gap-1.5 sm:gap-2">
-                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-900 animate-pulse flex-shrink-0" />
-                  <span className="text-xs sm:text-sm md:text-base font-black text-amber-900 whitespace-nowrap tracking-normal sm:tracking-wide drop-shadow-sm">
+              <div className="relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-primary/90 via-primary to-primary/90 backdrop-blur-sm border-2 border-primary/40 shadow-elegant">
+                <div className="flex items-center justify-center">
+                  <span className="text-xs sm:text-sm md:text-base font-bold text-primary-foreground whitespace-nowrap tracking-normal sm:tracking-wide">
                     {plan.badge.toUpperCase()}
                   </span>
-                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-900 animate-pulse flex-shrink-0" style={{ animationDelay: '0.5s' }} />
                 </div>
               </div>
             </div>
