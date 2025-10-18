@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import logo from "@/assets/logo-main.png";
+import { useSubscription } from "@/hooks/useSubscription";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const subscription = useSubscription(user);
 
   useEffect(() => {
     // Get initial session
@@ -145,9 +147,19 @@ const Header = () => {
             )}
           </div>
 
-          {/* Mobile Login Button & Menu */}
+          {/* Mobile Dashboard & Menu */}
           <div className="md:hidden flex items-center gap-2">
-            {!user && (
+            {user && subscription.isActive ? (
+              <Button 
+                variant="default" 
+                size="sm"
+                onClick={() => navigate("/app/onboarding")}
+                className="text-xs px-3 flex items-center gap-1"
+              >
+                <LayoutDashboard className="w-3 h-3" />
+                Dashboard
+              </Button>
+            ) : !user ? (
               <Button 
                 variant="default" 
                 size="sm"
@@ -156,7 +168,8 @@ const Header = () => {
               >
                 Entrar
               </Button>
-            )}
+            ) : null}
+            
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth"
