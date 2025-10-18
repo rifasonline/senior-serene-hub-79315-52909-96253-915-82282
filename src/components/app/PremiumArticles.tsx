@@ -235,24 +235,112 @@ export function PremiumArticles({ isPro }: PremiumArticlesProps) {
 
       {/* Dialog de Leitura */}
       <Dialog open={!!selectedArticle} onOpenChange={() => setSelectedArticle(null)}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
           {selectedArticle && (
             <>
-              <DialogHeader>
-                <div className="mb-2">
+              <DialogHeader className="space-y-3 pb-4 border-b">
+                <div className="flex items-center gap-2">
                   <Badge className={getCategoryColor(selectedArticle.category)} variant="secondary">
                     {getCategoryLabel(selectedArticle.category)}
                   </Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(selectedArticle.created_at).toLocaleDateString('pt-BR')}
+                  </span>
                 </div>
-                <DialogTitle className="text-2xl">{selectedArticle.title}</DialogTitle>
-                <DialogDescription className="text-base">{selectedArticle.summary}</DialogDescription>
+                <DialogTitle className="text-3xl font-bold leading-tight">
+                  {selectedArticle.title}
+                </DialogTitle>
+                <DialogDescription className="text-base leading-relaxed">
+                  {selectedArticle.summary}
+                </DialogDescription>
               </DialogHeader>
-              <div className="prose prose-sm dark:prose-invert max-w-none mt-4">
-                {selectedArticle.content.split('\n').map((paragraph, index) => (
-                  <p key={index} className="mb-3 whitespace-pre-line">
-                    {paragraph}
-                  </p>
-                ))}
+              
+              <div className="mt-6 space-y-4 article-content">
+                {selectedArticle.content.split('\n\n').map((section, sectionIndex) => {
+                  // Identifica títulos (começam com ##)
+                  if (section.trim().startsWith('## ')) {
+                    const title = section.replace('## ', '').trim();
+                    return (
+                      <h2 key={sectionIndex} className="text-2xl font-bold mt-8 mb-4 flex items-center gap-2">
+                        {title}
+                      </h2>
+                    );
+                  }
+                  
+                  // Identifica subtítulos em negrito (**texto:**)
+                  if (section.includes('**') && section.includes(':')) {
+                    const formattedSection = section.split('\n').map((line, lineIndex) => {
+                      if (line.includes('**') && line.includes(':')) {
+                        const parts = line.split('**');
+                        return (
+                          <p key={lineIndex} className="font-semibold text-lg mt-4 mb-2 text-primary">
+                            {parts[1]?.replace(':', '')}
+                          </p>
+                        );
+                      }
+                      if (line.trim().startsWith('•')) {
+                        return (
+                          <li key={lineIndex} className="ml-4 text-base leading-relaxed">
+                            {line.replace('•', '').trim()}
+                          </li>
+                        );
+                      }
+                      if (line.trim().startsWith('📋') || line.trim().startsWith('✨') || 
+                          line.trim().startsWith('💡') || line.trim().startsWith('⚠️') ||
+                          line.trim().startsWith('🖼️')) {
+                        return (
+                          <div key={lineIndex} className="bg-muted/50 border-l-4 border-primary p-3 my-3 rounded-r italic">
+                            {line}
+                          </div>
+                        );
+                      }
+                      if (line.trim()) {
+                        return <p key={lineIndex} className="text-base leading-relaxed mb-2">{line}</p>;
+                      }
+                      return null;
+                    });
+                    
+                    return (
+                      <div key={sectionIndex} className="space-y-2">
+                        {formattedSection}
+                      </div>
+                    );
+                  }
+                  
+                  // Seções de lista (começam com •)
+                  if (section.includes('•')) {
+                    const lines = section.split('\n');
+                    return (
+                      <ul key={sectionIndex} className="space-y-2 ml-6 list-none">
+                        {lines.map((line, lineIndex) => {
+                          if (line.trim().startsWith('•')) {
+                            return (
+                              <li key={lineIndex} className="flex items-start gap-2">
+                                <span className="text-primary mt-1">•</span>
+                                <span className="text-base leading-relaxed">{line.replace('•', '').trim()}</span>
+                              </li>
+                            );
+                          }
+                          if (line.trim()) {
+                            return <p key={lineIndex} className="text-base leading-relaxed mb-2">{line}</p>;
+                          }
+                          return null;
+                        })}
+                      </ul>
+                    );
+                  }
+                  
+                  // Parágrafos normais
+                  if (section.trim()) {
+                    return (
+                      <p key={sectionIndex} className="text-base leading-relaxed whitespace-pre-line">
+                        {section}
+                      </p>
+                    );
+                  }
+                  
+                  return null;
+                })}
               </div>
             </>
           )}
