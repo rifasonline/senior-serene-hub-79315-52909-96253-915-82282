@@ -258,6 +258,39 @@ export type Database = {
           },
         ]
       }
+      premium_articles: {
+        Row: {
+          category: Database["public"]["Enums"]["article_category"]
+          content: string
+          created_at: string
+          id: string
+          image_url: string | null
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["article_category"]
+          content: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          summary: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["article_category"]
+          content?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -445,6 +478,12 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      article_category:
+        | "saude"
+        | "bem-estar"
+        | "dicas"
+        | "nutricao"
+        | "exercicios"
       medical_entry_type:
         | "exam"
         | "consultation"
@@ -585,6 +624,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      article_category: [
+        "saude",
+        "bem-estar",
+        "dicas",
+        "nutricao",
+        "exercicios",
+      ],
       medical_entry_type: [
         "exam",
         "consultation",

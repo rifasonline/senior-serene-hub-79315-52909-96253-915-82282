@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Clock, Calendar, TrendingUp, Plus, History, Bell, Crown, ListTodo, Activity } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { PremiumArticles } from '@/components/app/PremiumArticles';
 interface DashboardStats {
   totalTasks: number;
   completedTasks: number;
@@ -308,6 +309,11 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Artigos Premium */}
+        <div className="mb-8">
+          <PremiumArticles isPro={subscription.plan === 'pro'} />
+        </div>
 
         {/* Banner do Plano */}
         {subscription.plan !== 'pro' && <Card className="border-primary/50 bg-gradient-to-r from-primary/5 to-primary/10">
