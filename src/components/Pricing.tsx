@@ -114,13 +114,19 @@ const Pricing = () => {
                     className="absolute -top-3 left-1/2 -translate-x-1/2 z-20"
                   >
                     {plan.badge && (
-                      <div className="px-6 py-2.5 rounded-full bg-gradient-to-r from-accent via-accent/90 to-accent backdrop-blur-sm border-2 border-white/40 shadow-elegant hover-scale">
-                        <div className="flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-accent-foreground animate-pulse" />
-                          <span className="text-sm font-bold text-accent-foreground whitespace-nowrap tracking-wide">
-                            {plan.badge}
-                          </span>
-                          <Sparkles className="w-4 h-4 text-accent-foreground animate-pulse" style={{ animationDelay: '0.5s' }} />
+                      <div className="relative">
+                        {/* Glow animado ao redor */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-lg opacity-70 animate-pulse"></div>
+                        
+                        {/* Badge principal */}
+                        <div className="relative px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 backdrop-blur-sm border-2 border-white/60 shadow-elegant">
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="w-5 h-5 text-amber-900 animate-pulse" />
+                            <span className="text-base font-black text-amber-900 whitespace-nowrap tracking-wide drop-shadow-sm">
+                              {plan.badge.toUpperCase()}
+                            </span>
+                            <Sparkles className="w-5 h-5 text-amber-900 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                          </div>
                         </div>
                       </div>
                     )}
@@ -153,21 +159,32 @@ const Pricing = () => {
                   variant={plan.popular ? "hero" : "default"}
                   size="lg"
                   className={cn(
-                    "w-full group font-semibold",
+                    "w-full group font-semibold relative overflow-hidden",
                     "flex items-center justify-center",
                     "px-3 sm:px-4 md:px-6 lg:px-8",
                     "py-3 sm:py-3.5 md:py-4",
                     "text-sm sm:text-base md:text-lg",
                     "min-h-[48px] sm:min-h-[52px] md:min-h-[56px]",
                     "leading-tight",
-                    plan.popular && "lg:text-xl"
+                    plan.popular && [
+                      "lg:text-xl",
+                      "shadow-[0_4px_20px_rgba(var(--primary-rgb),0.4)]",
+                      "hover:shadow-[0_6px_30px_rgba(var(--primary-rgb),0.6)]",
+                      "hover:scale-[1.02]",
+                      "transition-all duration-300",
+                      "before:absolute before:inset-0",
+                      "before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent",
+                      "before:translate-x-[-200%] before:transition-transform before:duration-700",
+                      "hover:before:translate-x-[200%]"
+                    ]
                   )}
                   onClick={() => window.open(plan.popular ? 'https://pay.cakto.com.br/yd5xq6j_612646' : 'https://pay.cakto.com.br/34vi36u_612634', '_blank')}
                 >
                   {plan.popular ? (
                     <>
-                      <Sparkles className="mr-1 sm:mr-1.5 md:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 flex-shrink-0" />
-                      <span className="whitespace-nowrap text-center">Assinar Plano Pro</span>
+                      <Sparkles className="mr-2 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 animate-pulse" />
+                      <span className="whitespace-nowrap text-center font-bold">Assinar Plano Pro</span>
+                      <ArrowRight className="ml-2 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 transition-transform group-hover:translate-x-1" />
                     </>
                   ) : (
                     <>
@@ -182,41 +199,59 @@ const Pricing = () => {
                 {plan.showBasicIncluded ? (
                   <>
                     {/* Badge "Tudo do Plano Básico +" */}
-                    <div className="w-full mb-4 p-4 rounded-xl bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border-2 border-primary/30">
-                      <div className="flex items-center gap-2">
-                        <span className="text-base font-bold text-primary">
-                          {plan.basicSummary}
+                    <div className="w-full mb-4 p-5 rounded-xl bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-50 dark:from-emerald-950/30 dark:via-green-950/30 dark:to-emerald-950/30 border-2 border-emerald-400/40 shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm">
+                          <Check className="w-5 h-5 text-white font-bold" />
+                        </div>
+                        <span className="text-base font-bold text-emerald-700 dark:text-emerald-300">
+                          ✓ {plan.basicSummary} incluído
                         </span>
                       </div>
                     </div>
                     
                     {/* Recursos Avançados Exclusivos */}
-                    <span className="text-base text-left mb-3 font-bold text-foreground">
-                      Recursos Avançados Exclusivos:
-                    </span>
+                    <div className="w-full mb-4 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                      <span className="text-lg font-black text-foreground bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                        Recursos Avançados Exclusivos
+                      </span>
+                    </div>
                     {plan.advancedFeatures?.map((feature, index) => {
                       const FeatureIcon = feature.icon;
                       return (
-                        <div key={index} className="flex items-center justify-start gap-3">
+                        <motion.div 
+                          key={index}
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.05 }}
+                          className="flex items-center justify-start gap-3 w-full group cursor-default hover:translate-x-1 transition-transform"
+                        >
                           <div className={cn(
-                            "flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0",
-                            feature.included ? "bg-secondary/10" : "bg-muted"
+                            "flex items-center justify-center rounded-full flex-shrink-0 shadow-sm",
+                            "w-9 h-9",
+                            feature.included 
+                              ? "bg-gradient-to-br from-secondary to-secondary/80 group-hover:scale-110 transition-transform" 
+                              : "bg-muted"
                           )}>
                             {feature.included && FeatureIcon ? (
-                              <FeatureIcon className="w-4 h-4 text-secondary" />
+                              <FeatureIcon className="w-5 h-5 text-white" />
                             ) : feature.included ? (
-                              <Check className="w-4 h-4 text-secondary" />
+                              <Check className="w-5 h-5 text-white" />
                             ) : (
                               <X className="w-4 h-4 text-muted-foreground" />
                             )}
                           </div>
                           <span className={cn(
                             "text-sm",
-                            feature.included ? "text-foreground font-medium" : "text-muted-foreground"
+                            feature.included 
+                              ? "text-foreground font-semibold group-hover:text-primary transition-colors" 
+                              : "text-muted-foreground"
                           )}>
                             {feature.name}
                           </span>
-                        </div>
+                        </motion.div>
                       );
                     })}
                   </>

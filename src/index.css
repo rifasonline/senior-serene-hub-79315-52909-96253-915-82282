@@ -41,6 +41,9 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
+    /* RGB values for rgba usage */
+    --primary-rgb: 91, 168, 209;
+
     /* Custom gradients */
     --gradient-primary: linear-gradient(135deg, hsl(207 60% 58%), hsl(207 70% 68%));
     --gradient-secondary: linear-gradient(135deg, hsl(150 45% 55%), hsl(150 50% 65%));
@@ -89,6 +92,9 @@ All colors MUST be HSL.
     --border: 210 25% 24%;
     --input: 210 25% 24%;
     --ring: 207 55% 55%;
+
+    /* RGB values for rgba usage */
+    --primary-rgb: 83, 144, 179;
 
     --gradient-primary: linear-gradient(135deg, hsl(207 55% 55%), hsl(207 65% 65%));
     --gradient-secondary: linear-gradient(135deg, hsl(150 40% 50%), hsl(150 45% 60%));
