@@ -103,34 +103,34 @@ const Pricing = () => {
                   </motion.div>
                   
                   {/* Badge Melhor Custo-Benefício */}
-                  <motion.div
-                    initial={{ opacity: 0, y: -20, scale: 0.9 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ 
-                      duration: 0.5,
-                      delay: 0.25
-                    }}
-                    className="absolute -top-3 left-1/2 -translate-x-1/2 z-20"
-                  >
-                    {plan.badge && (
-                      <div className="relative">
-                        {/* Glow animado ao redor */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-lg opacity-70 animate-pulse"></div>
-                        
-                        {/* Badge principal */}
-                        <div className="relative px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 backdrop-blur-sm border-2 border-white/60 shadow-elegant">
-                          <div className="flex items-center gap-2">
-                            <Sparkles className="w-5 h-5 text-amber-900 animate-pulse" />
-                            <span className="text-base font-black text-amber-900 whitespace-nowrap tracking-wide drop-shadow-sm">
-                              {plan.badge.toUpperCase()}
-                            </span>
-                            <Sparkles className="w-5 h-5 text-amber-900 animate-pulse" style={{ animationDelay: '0.5s' }} />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: -20, scale: 0.9 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ 
+            duration: 0.5,
+            delay: 0.25
+          }}
+          className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 max-w-[90%] px-2"
+        >
+          {plan.badge && (
+            <div className="relative">
+              {/* Glow animado ao redor */}
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-lg opacity-70 animate-pulse"></div>
+              
+              {/* Badge principal */}
+              <div className="relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 backdrop-blur-sm border-2 border-white/60 shadow-elegant">
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-900 animate-pulse flex-shrink-0" />
+                  <span className="text-xs sm:text-sm md:text-base font-black text-amber-900 whitespace-nowrap tracking-normal sm:tracking-wide drop-shadow-sm">
+                    {plan.badge.toUpperCase()}
+                  </span>
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-900 animate-pulse flex-shrink-0" style={{ animationDelay: '0.5s' }} />
+                </div>
+              </div>
+            </div>
+          )}
+        </motion.div>
                   
                   <div className="absolute top-1/2 inset-x-0 mx-auto h-12 -rotate-45 w-full bg-primary/30 rounded-2xl lg:rounded-3xl blur-[8rem] -z-10"></div>
                 </>
