@@ -31,6 +31,7 @@ export default function History() {
   const [filterType, setFilterType] = useState<string>("all");
   const [selectedActivity, setSelectedActivity] = useState<HistoryItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
   const [stats, setStats] = useState({
     total: 0,
     tasks: 0,
@@ -189,11 +190,65 @@ export default function History() {
     }
   };
 
-  const handleExport = () => {
-    toast({
-      title: "Exportação em desenvolvimento",
-      description: "A funcionalidade de exportação estará disponível em breve no Plano Pro.",
-    });
+  const handleExport = async () => {
+    try {
+      setIsExporting(true);
+
+      // Prepare CSV headers
+      const headers = [
+        "Data",
+        "Tipo",
+        "Título",
+        "Descrição",
+        "Para",
+        "Status"
+      ];
+
+      // Prepare CSV rows
+      const rows = filteredActivities.map(activity => [
+        format(new Date(activity.date), "dd/MM/yyyy HH:mm", { locale: ptBR }),
+        activity.type === "task" ? "Tarefa" : activity.type === "appointment" ? "Evento" : "Médico",
+        activity.title,
+        activity.description.replace(/,/g, ";"), // Replace commas to avoid CSV issues
+        activity.elderlyName || "N/A",
+        activity.status || "N/A"
+      ]);
+
+      // Create CSV content
+      const csvContent = [
+        headers.join(","),
+        ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+      ].join("\n");
+
+      // Add BOM for proper Excel encoding
+      const BOM = "\uFEFF";
+      const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
+
+      // Create download link
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `historico-cuidabem-${format(new Date(), "yyyy-MM-dd")}.csv`);
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Show success message
+      toast({
+        title: "Histórico exportado com sucesso",
+        description: `${filteredActivities.length} registro(s) exportado(s) em CSV.`,
+      });
+    } catch (error) {
+      console.error("Error exporting history:", error);
+      toast({
+        title: "Erro ao exportar",
+        description: "Não foi possível exportar o histórico. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -338,9 +393,23 @@ export default function History() {
           <div className="text-sm text-gray-600">
             <span className="font-semibold">{filteredActivities.length}</span> registro(s) carregado(s)
           </div>
-          <Button onClick={handleExport} variant="outline" className="gap-2">
-            <Download className="h-4 w-4" />
-            Exportar Histórico
+          <Button 
+            onClick={handleExport} 
+            variant="outline" 
+            className="gap-2"
+            disabled={isExporting || filteredActivities.length === 0}
+          >
+            {isExporting ? (
+              <>
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Exportando...
+              </>
+            ) : (
+              <>
+                <Download className="h-4 w-4" />
+                Exportar Histórico
+              </>
+            )}
           </Button>
         </div>
       </div>
