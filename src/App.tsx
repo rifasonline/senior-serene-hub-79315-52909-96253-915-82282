@@ -32,6 +32,7 @@ const AppContent = () => {
   const location = useLocation();
   const isAuthPage = location.pathname === "/auth";
   const isAppPage = location.pathname.startsWith("/app");
+  const isDashboard = location.pathname === "/app/dashboard";
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -99,7 +100,7 @@ const AppContent = () => {
         </Routes>
       </main>
       {!isAuthPage && !isAppPage && <Footer />}
-      {isAppPage && <EmergencyButton user={user} />}
+      {isDashboard && <EmergencyButton user={user} />}
     </div>
   );
 };
