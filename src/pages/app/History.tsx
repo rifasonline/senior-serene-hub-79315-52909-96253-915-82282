@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -194,50 +196,96 @@ export default function History() {
     try {
       setIsExporting(true);
 
-      // Prepare CSV headers
-      const headers = [
-        "Data",
-        "Tipo",
-        "Título",
-        "Descrição",
-        "Para",
-        "Status"
-      ];
+      // Create PDF document
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
 
-      // Prepare CSV rows
-      const rows = filteredActivities.map(activity => [
-        format(new Date(activity.date), "dd/MM/yyyy HH:mm", { locale: ptBR }),
+      // Add title
+      doc.setFontSize(18);
+      doc.setTextColor(59, 130, 246); // Blue color
+      doc.text("Histórico de Atividades - CuidaBem", 14, 20);
+
+      // Add export date
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Exportado em: ${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}`, 14, 28);
+
+      // Add statistics
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Total de Atividades: ${stats.total}`, 14, 38);
+      doc.text(`Tarefas: ${stats.tasks} | Eventos: ${stats.appointments} | Registros Médicos: ${stats.medical}`, 14, 44);
+
+      // Prepare table data
+      const tableData = filteredActivities.map(activity => [
+        format(new Date(activity.date), "dd/MM/yy HH:mm", { locale: ptBR }),
         activity.type === "task" ? "Tarefa" : activity.type === "appointment" ? "Evento" : "Médico",
-        activity.title,
-        activity.description.replace(/,/g, ";"), // Replace commas to avoid CSV issues
+        activity.title.length > 30 ? activity.title.substring(0, 27) + "..." : activity.title,
+        activity.description.length > 40 ? activity.description.substring(0, 37) + "..." : activity.description,
         activity.elderlyName || "N/A",
-        activity.status || "N/A"
+        activity.status || "N/A",
       ]);
 
-      // Create CSV content
-      const csvContent = [
-        headers.join(","),
-        ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
-      ].join("\n");
+      // Add table
+      autoTable(doc, {
+        head: [["Data", "Tipo", "Título", "Descrição", "Para", "Status"]],
+        body: tableData,
+        startY: 52,
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+        },
+        headStyles: {
+          fillColor: [59, 130, 246],
+          textColor: [255, 255, 255],
+          fontStyle: "bold",
+        },
+        alternateRowStyles: {
+          fillColor: [245, 247, 250],
+        },
+        columnStyles: {
+          0: { cellWidth: 25 },
+          1: { cellWidth: 20 },
+          2: { cellWidth: 35 },
+          3: { cellWidth: 50 },
+          4: { cellWidth: 30 },
+          5: { cellWidth: 22 },
+        },
+        margin: { top: 52, left: 14, right: 14 },
+      });
 
-      // Add BOM for proper Excel encoding
-      const BOM = "\uFEFF";
-      const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
+      // Generate PDF blob for mobile compatibility
+      const pdfBlob = doc.output("blob");
+      const fileName = `historico-cuidabem-${format(new Date(), "yyyy-MM-dd")}.pdf`;
 
-      // Create download link
-      const link = document.createElement("a");
-      const url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      link.setAttribute("download", `historico-cuidabem-${format(new Date(), "yyyy-MM-dd")}.csv`);
-      link.style.visibility = "hidden";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Mobile-friendly download method
+      if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) {
+        // For mobile devices, use a more compatible method
+        const url = URL.createObjectURL(pdfBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 100);
+      } else {
+        // For desktop, use standard method
+        doc.save(fileName);
+      }
 
       // Show success message
       toast({
         title: "Histórico exportado com sucesso",
-        description: `${filteredActivities.length} registro(s) exportado(s) em CSV.`,
+        description: `${filteredActivities.length} registro(s) exportado(s) em PDF.`,
       });
     } catch (error) {
       console.error("Error exporting history:", error);
