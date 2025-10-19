@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Clock, Calendar, TrendingUp, Plus, History, Bell, Crown, ListTodo, Activity } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { PremiumArticles } from '@/components/app/PremiumArticles';
+import logoDashboard from '@/assets/logo-dashboard.png';
 interface DashboardStats {
   totalTasks: number;
   completedTasks: number;
@@ -164,13 +165,26 @@ export default function Dashboard() {
         <Card className="mb-8 border-2">
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 sm:gap-4">
+                {/* Logo do CuidaBem */}
+                <img 
+                  src={logoDashboard} 
+                  alt="CuidaBem Logo" 
+                  className="h-12 w-12 sm:h-14 sm:w-14 object-contain flex-shrink-0"
+                />
+                
+                {/* Separator visual (apenas desktop) */}
+                <div className="h-12 w-px bg-border hidden sm:block" />
+                
+                {/* Avatar do usuário */}
                 <Avatar className="h-16 w-16 border-2 border-primary">
                   <AvatarImage src={profileData?.avatar_url || user?.user_metadata?.avatar_url} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-xl">
                     {getInitials(profileData?.full_name || user?.user_metadata?.full_name)}
                   </AvatarFallback>
                 </Avatar>
+                
+                {/* Nome e badge do usuário */}
                 <div>
                   <CardTitle className="text-2xl">
                     Olá, {profileData?.full_name || user?.user_metadata?.full_name || 'Usuário'}!
@@ -183,6 +197,8 @@ export default function Dashboard() {
                   </CardDescription>
                 </div>
               </div>
+              
+              {/* Botão Ver Perfil */}
               <Button onClick={() => navigate('/app/profile')} variant="outline">
                 Ver Perfil
               </Button>
