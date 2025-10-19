@@ -107,10 +107,16 @@ export default function Dashboard() {
       } = await supabase.from('daily_tasks').select('id, task_type, completed_at').in('elderly_id', elderlyIds).eq('completed', true).order('completed_at', {
         ascending: false
       }).limit(3);
+      
+      const translateTaskType = (taskType: string) => {
+        if (taskType === 'Other') return 'Outra atividade';
+        return taskType;
+      };
+      
       const recentActivities = recentTasks?.map(task => ({
         id: task.id,
         type: task.task_type,
-        description: `${task.task_type} concluída`,
+        description: `${translateTaskType(task.task_type)} concluída`,
         timestamp: task.completed_at || ''
       })) || [];
 
