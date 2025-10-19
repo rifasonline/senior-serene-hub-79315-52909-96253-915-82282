@@ -228,14 +228,40 @@ export default function Tasks() {
 
   const openEditDialog = (task: Task) => {
     setEditingTask(task);
+    
+    // Safely format dates only if they are valid
+    let deadlineValue = "";
+    if (task.deadline) {
+      try {
+        const deadlineDate = new Date(task.deadline);
+        if (!isNaN(deadlineDate.getTime())) {
+          deadlineValue = format(deadlineDate, "yyyy-MM-dd");
+        }
+      } catch (e) {
+        console.error("Invalid deadline date:", task.deadline);
+      }
+    }
+    
+    let scheduledTimeValue = "";
+    if (task.scheduled_time) {
+      try {
+        const scheduledDate = new Date(task.scheduled_time);
+        if (!isNaN(scheduledDate.getTime())) {
+          scheduledTimeValue = format(scheduledDate, "yyyy-MM-dd'T'HH:mm");
+        }
+      } catch (e) {
+        console.error("Invalid scheduled_time date:", task.scheduled_time);
+      }
+    }
+    
     setFormData({
       elderly_id: task.elderly_id,
       title: task.title,
       description: task.description,
       priority: task.priority,
       status: task.status,
-      deadline: task.deadline ? format(new Date(task.deadline), "yyyy-MM-dd") : "",
-      scheduled_time: task.scheduled_time ? format(new Date(task.scheduled_time), "yyyy-MM-dd'T'HH:mm") : "",
+      deadline: deadlineValue,
+      scheduled_time: scheduledTimeValue,
       notes: task.notes || "",
     });
     setIsDialogOpen(true);
@@ -536,12 +562,22 @@ export default function Tasks() {
                                   </p>
                                 )}
 
-                                {task.deadline && (
-                                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                                    <Calendar className="h-3 w-3" />
-                                    Prazo: {format(new Date(task.deadline), "dd/MM/yyyy", { locale: ptBR })}
-                                  </div>
-                                )}
+                                {task.deadline && (() => {
+                                  try {
+                                    const deadlineDate = new Date(task.deadline);
+                                    if (!isNaN(deadlineDate.getTime())) {
+                                      return (
+                                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                                          <Calendar className="h-3 w-3" />
+                                          Prazo: {format(deadlineDate, "dd/MM/yyyy", { locale: ptBR })}
+                                        </div>
+                                      );
+                                    }
+                                  } catch (e) {
+                                    return null;
+                                  }
+                                  return null;
+                                })()}
 
                                 <div className="flex gap-2">
                                   <Button
