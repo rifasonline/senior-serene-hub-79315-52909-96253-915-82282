@@ -113,11 +113,11 @@ export default function Dashboard() {
         return taskType;
       };
       
-      const recentActivities = recentTasks?.map(task => ({
+      const recentActivities = recentTasks?.filter(task => task.completed_at).map(task => ({
         id: task.id,
         type: task.task_type,
         description: `${translateTaskType(task.task_type)} concluída`,
-        timestamp: task.completed_at || ''
+        timestamp: task.completed_at
       })) || [];
 
       // Calculate weekly progress
