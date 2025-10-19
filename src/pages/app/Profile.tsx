@@ -80,6 +80,8 @@ export default function Profile() {
     emergency_contact_phone: "",
   });
 
+  const [ageError, setAgeError] = useState("");
+
   useEffect(() => {
     checkAuth();
   }, []);
@@ -171,6 +173,19 @@ export default function Profile() {
         });
         return;
       }
+
+      // Validar idade máxima de 150 anos
+      const age = calculateAge(elderlyForm.birth_date);
+      if (age > 150) {
+        setAgeError("A idade não pode ultrapassar 150 anos.");
+        toast({
+          title: "Idade inválida",
+          description: "A idade não pode ultrapassar 150 anos.",
+          variant: "destructive",
+        });
+        return;
+      }
+      setAgeError("");
 
       const isPro = subscription?.plan_type === "pro";
       if (!isPro && elderlyProfiles.length >= 2 && !editingElderly) {
@@ -916,8 +931,14 @@ export default function Profile() {
                   id="elderly_birth_date"
                   type="date"
                   value={elderlyForm.birth_date}
-                  onChange={(e) => setElderlyForm({ ...elderlyForm, birth_date: e.target.value })}
+                  onChange={(e) => {
+                    setElderlyForm({ ...elderlyForm, birth_date: e.target.value });
+                    setAgeError("");
+                  }}
                 />
+                {ageError && (
+                  <p className="text-sm text-destructive">{ageError}</p>
+                )}
               </div>
 
               <div className="space-y-2">
