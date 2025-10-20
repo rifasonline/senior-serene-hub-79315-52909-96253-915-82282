@@ -47,15 +47,7 @@ const Auth = () => {
     }
   }, [searchParams, toast]);
 
-  useEffect(() => {
-    // Check if user is already logged in on initial load
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        // Let ProtectedRoute handle the subscription check and redirect
-        navigate("/app/dashboard", { replace: true });
-      }
-    });
-  }, [navigate]);
+  // Removed automatic redirection - let ProtectedRoute handle auth flow
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,19 +118,32 @@ const Auth = () => {
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim().toLowerCase(),
       password,
     });
 
     setLoading(false);
 
     if (error) {
+      console.error('Erro no login:', error);
       toast({
         variant: "destructive",
-        title: "Erro ao fazer login",
-        description: error.message,
+        title: "Erro no login",
+        description: error.message === 'Invalid login credentials' 
+          ? "Email ou senha incorretos" 
+          : error.message,
       });
+      return;
     }
+
+    console.log('Login realizado com sucesso');
+    toast({
+      title: "Login realizado",
+      description: "Bem-vindo de volta!",
+    });
+    
+    // Redirecionar após login bem-sucedido
+    navigate("/app/dashboard", { replace: true });
   };
 
   return (

@@ -71,6 +71,17 @@ export const useSubscription = (user: User | null): Subscription => {
     const fetchSubscription = async () => {
       console.log('[useSubscription] Buscando assinatura para user:', user.id);
       
+      // Timeout de segurança
+      const timeoutId = setTimeout(() => {
+        console.warn('[useSubscription] Timeout atingido (5s), forçando loading = false');
+        setSubscription({
+          plan: null,
+          isActive: false,
+          features: getFeatures(null),
+          loading: false,
+        });
+      }, 5000);
+      
       try {
         const { data, error } = await supabase
           .from('subscriptions')
@@ -79,6 +90,7 @@ export const useSubscription = (user: User | null): Subscription => {
           .eq('status', 'active')
           .maybeSingle();
 
+        clearTimeout(timeoutId);
         console.log('[useSubscription] Resultado da query:', { data, error });
 
         if (error || !data) {
@@ -105,6 +117,7 @@ export const useSubscription = (user: User | null): Subscription => {
           loading: false,
         });
       } catch (err) {
+        clearTimeout(timeoutId);
         console.error('[useSubscription] Erro ao buscar assinatura:', err);
         setSubscription({
           plan: null,

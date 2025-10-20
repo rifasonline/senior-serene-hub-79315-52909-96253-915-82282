@@ -69,6 +69,14 @@ export const ProtectedRoute = ({ children, requireSubscription = true }: Protect
   }
 
   // Check subscription requirement
+  console.log('[ProtectedRoute] Estado completo:', {
+    userId: user.id,
+    loading,
+    subscriptionLoading: subscription.loading,
+    isActive: subscription.isActive,
+    plan: subscription.plan
+  });
+  
   if (!subscription.isActive) {
     console.log('[ProtectedRoute] Assinatura inativa, redirecionando para /auth');
     return <Navigate to="/auth?error=no_subscription" replace />;
