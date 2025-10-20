@@ -48,30 +48,14 @@ const Auth = () => {
   }, [searchParams, toast]);
 
   useEffect(() => {
-    let redirected = false;
-
-    // Check if user is already logged in
+    // Check if user is already logged in on initial load
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session && !redirected) {
-        redirected = true;
-        const from = (location.state as any)?.from || "/app/dashboard";
-        navigate(from, { replace: true });
+      if (session) {
+        // Let ProtectedRoute handle the subscription check and redirect
+        navigate("/app/dashboard", { replace: true });
       }
     });
-
-    // Listen for auth changes (only for NEW sign-ins)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session && event === "SIGNED_IN" && !redirected) {
-        redirected = true;
-        const from = (location.state as any)?.from || "/app/dashboard";
-        navigate(from, { replace: true });
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate, location]);
+  }, [navigate]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -69,33 +69,50 @@ export const useSubscription = (user: User | null): Subscription => {
     }
 
     const fetchSubscription = async () => {
-      const { data, error } = await supabase
-        .from('subscriptions')
-        .select('plan_type, status, expires_at')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
-        .maybeSingle();
+      console.log('[useSubscription] Buscando assinatura para user:', user.id);
+      
+      try {
+        const { data, error } = await supabase
+          .from('subscriptions')
+          .select('plan_type, status, expires_at')
+          .eq('user_id', user.id)
+          .eq('status', 'active')
+          .maybeSingle();
 
-      if (error || !data) {
+        console.log('[useSubscription] Resultado da query:', { data, error });
+
+        if (error || !data) {
+          console.log('[useSubscription] Sem assinatura ativa:', error?.message || 'Nenhum dado encontrado');
+          setSubscription({
+            plan: null,
+            isActive: false,
+            features: getFeatures(null),
+            loading: false,
+          });
+          return;
+        }
+
+        const isExpired = data.expires_at && new Date(data.expires_at) < new Date();
+        const isActive = data.status === 'active' && !isExpired;
+        const plan = isActive ? data.plan_type : null;
+
+        console.log('[useSubscription] Estado final:', { plan, isActive, isExpired, status: data.status });
+
+        setSubscription({
+          plan,
+          isActive,
+          features: getFeatures(plan),
+          loading: false,
+        });
+      } catch (err) {
+        console.error('[useSubscription] Erro ao buscar assinatura:', err);
         setSubscription({
           plan: null,
           isActive: false,
           features: getFeatures(null),
           loading: false,
         });
-        return;
       }
-
-      const isExpired = data.expires_at && new Date(data.expires_at) < new Date();
-      const isActive = data.status === 'active' && !isExpired;
-      const plan = isActive ? data.plan_type : null;
-
-      setSubscription({
-        plan,
-        isActive,
-        features: getFeatures(plan),
-        loading: false,
-      });
     };
 
     fetchSubscription();

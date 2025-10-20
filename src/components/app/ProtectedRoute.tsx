@@ -34,13 +34,25 @@ export const ProtectedRoute = ({ children, requireSubscription = true }: Protect
     return () => authSubscription.unsubscribe();
   }, []);
 
-  // Show loading state
-  if (loading || subscription.loading) {
+  // Show loading state - wait for BOTH auth and subscription to finish loading
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Carregando...</p>
+          <p className="text-sm text-muted-foreground">Verificando autenticação...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Wait for subscription data to load
+  if (subscription.loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Verificando assinatura...</p>
         </div>
       </div>
     );
@@ -58,8 +70,10 @@ export const ProtectedRoute = ({ children, requireSubscription = true }: Protect
 
   // Check subscription requirement
   if (!subscription.isActive) {
+    console.log('[ProtectedRoute] Assinatura inativa, redirecionando para /auth');
     return <Navigate to="/auth?error=no_subscription" replace />;
   }
 
+  console.log('[ProtectedRoute] Acesso permitido - Plano:', subscription.plan);
   return <>{children}</>;
 };
