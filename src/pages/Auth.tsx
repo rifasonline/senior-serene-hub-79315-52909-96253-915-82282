@@ -48,21 +48,25 @@ const Auth = () => {
   }, [searchParams, toast]);
 
   useEffect(() => {
-    const from = (location.state as any)?.from || "/app/dashboard";
+    let redirected = false;
 
     // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        navigate(from);
+      if (session && !redirected) {
+        redirected = true;
+        const from = (location.state as any)?.from || "/app/dashboard";
+        navigate(from, { replace: true });
       }
     });
 
-    // Listen for auth changes
+    // Listen for auth changes (only for NEW sign-ins)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session && (event === "SIGNED_IN" || event === "INITIAL_SESSION")) {
-        navigate(from);
+      if (session && event === "SIGNED_IN" && !redirected) {
+        redirected = true;
+        const from = (location.state as any)?.from || "/app/dashboard";
+        navigate(from, { replace: true });
       }
     });
 
