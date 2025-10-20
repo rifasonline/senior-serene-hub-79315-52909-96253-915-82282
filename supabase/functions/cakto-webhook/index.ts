@@ -9,12 +9,25 @@ const corsHeaders = {
 interface CaktoWebhookPayload {
   event: string;
   data: {
-    customer_email: string;
-    customer_name?: string;
-    plan_id?: string;
+    id?: string;
+    customer?: {
+      email: string;
+      name?: string;
+      phone?: string;
+      docNumber?: string;
+    };
+    offer?: {
+      id?: string;
+      name?: string;
+      price?: number;
+    };
+    product?: {
+      name?: string;
+      id?: string;
+    };
     status?: string;
-    subscription_id?: string;
-    expires_at?: string;
+    amount?: number;
+    paidAt?: string;
     [key: string]: any;
   };
 }
@@ -41,7 +54,7 @@ serve(async (req) => {
     console.log('Received Cakto webhook:', payload);
 
     const { event, data } = payload;
-    const customerEmail = data.customer_email;
+    const customerEmail = data.customer?.email;
 
     if (!customerEmail) {
       throw new Error('Email do cliente não fornecido');
@@ -76,15 +89,19 @@ serve(async (req) => {
     let planType: 'basic' | 'pro' = 'basic';
 
     switch (event) {
+      case 'purchase_approved':
       case 'subscription.created':
       case 'subscription.updated':
       case 'payment.approved':
         subscriptionStatus = 'active';
-        // Mapear plan_id da Cakto para seu sistema
-        planType = data.plan_id?.toLowerCase().includes('pro') ? 'pro' : 'basic';
+        // Mapear produto/oferta da Cakto para plano
+        const productName = data.product?.name?.toLowerCase() || '';
+        const offerName = data.offer?.name?.toLowerCase() || '';
+        planType = (productName.includes('pro') || offerName.includes('pro')) ? 'pro' : 'basic';
         break;
       
       case 'subscription.cancelled':
+      case 'purchase_refunded':
         subscriptionStatus = 'cancelled';
         break;
       
@@ -117,8 +134,8 @@ serve(async (req) => {
         .update({
           plan_type: planType,
           status: subscriptionStatus,
-          stripe_subscription_id: data.subscription_id || existingSubscription.stripe_subscription_id,
-          expires_at: data.expires_at || null,
+          stripe_subscription_id: data.id || existingSubscription.stripe_subscription_id,
+          expires_at: null,
           updated_at: new Date().toISOString()
         })
         .eq('id', existingSubscription.id)
@@ -136,8 +153,8 @@ serve(async (req) => {
           user_id: user.id,
           plan_type: planType,
           status: subscriptionStatus,
-          stripe_subscription_id: data.subscription_id,
-          expires_at: data.expires_at || null,
+          stripe_subscription_id: data.id,
+          expires_at: null,
           started_at: new Date().toISOString()
         })
         .select()
