@@ -46,7 +46,7 @@ const Auth = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session && event === "SIGNED_IN") {
+      if (session && (event === "SIGNED_IN" || event === "INITIAL_SESSION")) {
         navigate(from);
       }
     });
