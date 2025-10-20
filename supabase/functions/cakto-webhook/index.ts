@@ -90,6 +90,7 @@ serve(async (req) => {
 
     switch (event) {
       case 'purchase_approved':
+      case 'pix_paid':
       case 'subscription.created':
       case 'subscription.updated':
       case 'payment.approved':
@@ -97,7 +98,15 @@ serve(async (req) => {
         // Mapear produto/oferta da Cakto para plano
         const productName = data.product?.name?.toLowerCase() || '';
         const offerName = data.offer?.name?.toLowerCase() || '';
-        planType = (productName.includes('pro') || offerName.includes('pro')) ? 'pro' : 'basic';
+        
+        // Verifica se é PRO (contém "pro" no nome) ou Básico
+        if (productName.includes('pro') || offerName.includes('pro')) {
+          planType = 'pro';
+        } else {
+          planType = 'basic';
+        }
+        
+        console.log(`Plano identificado: ${planType} para produto "${data.product?.name}"`);
         break;
       
       case 'subscription.cancelled':
