@@ -15,7 +15,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
-import { ProtectedRoute } from "./components/app/ProtectedRoute";
+import { RequireAuth } from "./components/app/RequireAuth";
 import Dashboard from "./pages/app/Dashboard";
 import Agenda from "./pages/app/Agenda";
 import Tasks from "./pages/app/Tasks";
@@ -65,29 +65,29 @@ const AppContent = () => {
           {/* Protected App Routes */}
           <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />
           <Route path="/app/dashboard" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Dashboard />
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           <Route path="/app/agenda" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Agenda />
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           <Route path="/app/tasks" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Tasks />
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           <Route path="/app/history" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <History />
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           <Route path="/app/profile" element={
-            <ProtectedRoute>
+            <RequireAuth>
               <Profile />
-            </ProtectedRoute>
+            </RequireAuth>
           } />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

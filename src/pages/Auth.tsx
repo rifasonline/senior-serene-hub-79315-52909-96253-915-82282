@@ -34,18 +34,7 @@ const Auth = () => {
   const [phone, setPhone] = useState("");
   const [cpf, setCpf] = useState("");
 
-  // Check for subscription error
-  useEffect(() => {
-    const error = searchParams.get("error");
-    if (error === "no_subscription") {
-      toast({
-        variant: "destructive",
-        title: "Assinatura Necessária",
-        description: "Você precisa de uma assinatura ativa para acessar o sistema. Por favor, adquira um plano.",
-        duration: 5000,
-      });
-    }
-  }, [searchParams, toast]);
+  // Removed subscription error check - simplified auth flow
 
   // Removed automatic redirection - let ProtectedRoute handle auth flow
 
@@ -136,16 +125,12 @@ const Auth = () => {
       return;
     }
 
-    console.log('Login realizado com sucesso');
     toast({
       title: "Login realizado",
       description: "Bem-vindo de volta!",
     });
     
-    // Aguardar um pouco para garantir que o useSubscription carregue
-    setTimeout(() => {
-      navigate("/app/dashboard", { replace: true });
-    }, 500);
+    navigate("/app/dashboard", { replace: true });
   };
 
   return (
