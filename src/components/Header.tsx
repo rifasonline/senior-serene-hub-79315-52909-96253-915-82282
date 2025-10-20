@@ -67,12 +67,12 @@ const Header = () => {
       }
       // Clear local storage
       localStorage.clear();
-      // Force reload to clear all state
-      window.location.href = "/";
+      // Navigate to home
+      navigate("/");
     } catch (error) {
       console.error("Unexpected error during sign out:", error);
-      // Force redirect anyway
-      window.location.href = "/";
+      // Navigate to home anyway
+      navigate("/");
     }
   };
 
@@ -122,7 +122,7 @@ const Header = () => {
                 <Button 
                   variant="default" 
                   size="lg"
-                  onClick={() => navigate("/app/onboarding")}
+                  onClick={() => navigate("/app/dashboard")}
                 >
                   <LayoutDashboard className="w-4 h-4 mr-2" />
                   Dashboard
@@ -153,7 +153,7 @@ const Header = () => {
               <Button 
                 variant="default" 
                 size="sm"
-                onClick={() => navigate("/app/onboarding")}
+                onClick={() => navigate("/app/dashboard")}
                 className="text-xs px-3 flex items-center gap-1"
               >
                 <LayoutDashboard className="w-3 h-3" />
@@ -221,7 +221,7 @@ const Header = () => {
                       size="lg" 
                       className="w-full"
                       onClick={() => {
-                        navigate("/app/onboarding");
+                        navigate("/app/dashboard");
                         setIsOpen(false);
                       }}
                     >

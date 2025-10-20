@@ -58,7 +58,7 @@ export const ProtectedRoute = ({ children, requireSubscription = true }: Protect
 
   // Check subscription requirement
   if (!subscription.isActive) {
-    return <Navigate to="/#pricing" replace />;
+    return <Navigate to="/auth" state={{ message: "Você precisa de uma assinatura ativa para acessar esta área." }} replace />;
   }
 
   return <>{children}</>;
