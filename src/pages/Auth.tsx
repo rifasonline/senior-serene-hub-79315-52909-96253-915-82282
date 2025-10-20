@@ -142,8 +142,10 @@ const Auth = () => {
       description: "Bem-vindo de volta!",
     });
     
-    // Redirecionar após login bem-sucedido
-    navigate("/app/dashboard", { replace: true });
+    // Aguardar um pouco para garantir que o useSubscription carregue
+    setTimeout(() => {
+      navigate("/app/dashboard", { replace: true });
+    }, 500);
   };
 
   return (
