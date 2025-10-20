@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,7 @@ const authSchema = z.object({
 const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -31,6 +33,19 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [cpf, setCpf] = useState("");
+
+  // Check for subscription error
+  useEffect(() => {
+    const error = searchParams.get("error");
+    if (error === "no_subscription") {
+      toast({
+        variant: "destructive",
+        title: "Assinatura Necessária",
+        description: "Você precisa de uma assinatura ativa para acessar o sistema. Por favor, adquira um plano.",
+        duration: 5000,
+      });
+    }
+  }, [searchParams, toast]);
 
   useEffect(() => {
     const from = (location.state as any)?.from || "/app/dashboard";

@@ -10,7 +10,7 @@ interface ProtectedRouteProps {
   requireSubscription?: boolean;
 }
 
-export const ProtectedRoute = ({ children, requireSubscription = false }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({ children, requireSubscription = true }: ProtectedRouteProps) => {
   const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -56,9 +56,9 @@ export const ProtectedRoute = ({ children, requireSubscription = false }: Protec
     return <>{children}</>;
   }
 
-  // Check subscription requirement (only if explicitly required)
-  if (requireSubscription && !subscription.isActive) {
-    return <Navigate to="/#pricing" state={{ message: "Assine um plano para acessar esta funcionalidade." }} replace />;
+  // Check subscription requirement
+  if (!subscription.isActive) {
+    return <Navigate to="/auth?error=no_subscription" replace />;
   }
 
   return <>{children}</>;
