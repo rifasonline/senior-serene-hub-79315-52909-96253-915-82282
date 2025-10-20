@@ -21,7 +21,7 @@ import Agenda from "./pages/app/Agenda";
 import Tasks from "./pages/app/Tasks";
 import History from "./pages/app/History";
 import Profile from "./pages/app/Profile";
-import Onboarding from "./pages/app/Onboarding";
+
 import { EmergencyButton } from "./components/app/EmergencyButton";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -64,11 +64,6 @@ const AppContent = () => {
           
           {/* Protected App Routes */}
           <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />
-          <Route path="/app/onboarding" element={
-            <ProtectedRoute requireSubscription={false}>
-              <Onboarding />
-            </ProtectedRoute>
-          } />
           <Route path="/app/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
