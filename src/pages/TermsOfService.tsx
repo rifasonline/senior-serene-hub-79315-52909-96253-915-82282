@@ -1,7 +1,11 @@
+import { useEffect } from "react";
 import { FileCheck, AlertCircle, Users, CreditCard, Shield, Scale } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const TermsOfService = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const sections = [
     {
       icon: FileCheck,

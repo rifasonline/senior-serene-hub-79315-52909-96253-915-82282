@@ -1,7 +1,11 @@
+import { useEffect } from "react";
 import { Shield, Lock, Eye, UserCheck, FileText, Database } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const PrivacyPolicy = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const sections = [
     {
       icon: FileText,
