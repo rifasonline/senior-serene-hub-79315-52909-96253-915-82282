@@ -63,15 +63,6 @@ const HowItWorks = () => {
               >
                 <Card className="relative bg-card shadow-card hover:shadow-elegant transition-smooth hover-lift h-full border-2">
                   <CardContent className="p-8 lg:p-10 flex flex-col items-center text-center">
-                    {/* Number Badge */}
-                    <div className="relative z-10 mb-6">
-                      <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-primary flex items-center justify-center shadow-glow">
-                        <span className="text-4xl lg:text-5xl font-bold text-white">
-                          {step.number}
-                        </span>
-                      </div>
-                    </div>
-
                     {/* Icon */}
                     <div className="mb-6">
                       <Icon className="w-10 h-10 lg:w-12 lg:h-12 text-primary" />
