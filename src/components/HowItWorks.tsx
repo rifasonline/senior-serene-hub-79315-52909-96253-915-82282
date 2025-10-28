@@ -73,8 +73,8 @@ const HowItWorks = () => {
                     </div>
 
                     {/* Icon */}
-                    <div className="mb-6 p-4 rounded-full bg-primary/10">
-                      <Icon className="w-8 h-8 lg:w-10 lg:h-10 text-primary" />
+                    <div className="mb-6">
+                      <Icon className="w-10 h-10 lg:w-12 lg:h-12 text-primary" />
                     </div>
 
                     {/* Title */}
