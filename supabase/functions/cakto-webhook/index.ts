@@ -87,6 +87,7 @@ serve(async (req) => {
     // Mapear eventos da Cakto
     let subscriptionStatus: 'active' | 'cancelled' | 'expired' = 'active';
     let planType: 'basic' | 'pro' = 'basic';
+    let isRefundOrCancellation = false;
 
     switch (event) {
       case 'purchase_approved':
@@ -111,11 +112,16 @@ serve(async (req) => {
       
       case 'subscription.cancelled':
       case 'purchase_refunded':
+      case 'refund.created':
+      case 'charge_refunded':
+        console.log(`Processando reembolso/cancelamento para usuário: ${customerEmail}`);
         subscriptionStatus = 'cancelled';
+        isRefundOrCancellation = true;
         break;
       
       case 'subscription.expired':
         subscriptionStatus = 'expired';
+        isRefundOrCancellation = true;
         break;
       
       default:
@@ -126,27 +132,45 @@ serve(async (req) => {
         );
     }
 
-    // Verificar se já existe assinatura ativa
-    const { data: existingSubscription } = await supabase
+    // Para reembolsos/cancelamentos, buscar qualquer subscription do usuário (não apenas ativa)
+    const query = supabase
       .from('subscriptions')
       .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .single();
+      .eq('user_id', user.id);
+    
+    // Se não for reembolso/cancelamento, buscar apenas ativa
+    if (!isRefundOrCancellation) {
+      query.eq('status', 'active');
+    }
+    
+    const { data: existingSubscription } = await query
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
     let result;
 
     if (existingSubscription) {
       // Atualizar assinatura existente
+      const updateData: any = {
+        status: subscriptionStatus,
+        updated_at: new Date().toISOString()
+      };
+
+      // Se for reembolso/cancelamento, manter o plano atual e não sobrescrever
+      if (isRefundOrCancellation) {
+        console.log(`Removendo acesso - Status: ${subscriptionStatus}, Plano: ${existingSubscription.plan_type}`);
+        updateData.expires_at = new Date().toISOString(); // Marca como expirada
+      } else {
+        // Para ativações, atualizar o plano
+        updateData.plan_type = planType;
+        updateData.stripe_subscription_id = data.id || existingSubscription.stripe_subscription_id;
+        updateData.expires_at = null;
+      }
+
       const { data: updated, error: updateError } = await supabase
         .from('subscriptions')
-        .update({
-          plan_type: planType,
-          status: subscriptionStatus,
-          stripe_subscription_id: data.id || existingSubscription.stripe_subscription_id,
-          expires_at: null,
-          updated_at: new Date().toISOString()
-        })
+        .update(updateData)
         .eq('id', existingSubscription.id)
         .select()
         .single();
@@ -155,7 +179,22 @@ serve(async (req) => {
       result = { updated };
       console.log('Assinatura atualizada:', updated);
     } else {
-      // Criar nova assinatura
+      // Apenas criar nova assinatura se NÃO for reembolso/cancelamento
+      if (isRefundOrCancellation) {
+        console.log('Evento de reembolso/cancelamento mas nenhuma assinatura encontrada para remover.');
+        return new Response(
+          JSON.stringify({ 
+            success: true, 
+            message: 'Nenhuma assinatura encontrada para cancelar' 
+          }),
+          { 
+            status: 200, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+
+      // Criar nova assinatura apenas para eventos de ativação
       const { data: created, error: insertError } = await supabase
         .from('subscriptions')
         .insert({
