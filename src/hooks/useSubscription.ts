@@ -69,14 +69,9 @@ export const useSubscription = (user: User | null): Subscription => {
     }
 
     const fetchSubscription = async () => {
-      console.log('[useSubscription] Buscando assinatura para user:', user.id);
-      
-      // Garantir que está em loading enquanto busca
       setSubscription(prev => ({ ...prev, loading: true }));
       
-      // Timeout de segurança
       const timeoutId = setTimeout(() => {
-        console.warn('[useSubscription] Timeout atingido (5s), forçando loading = false');
         setSubscription({
           plan: null,
           isActive: false,
@@ -94,10 +89,8 @@ export const useSubscription = (user: User | null): Subscription => {
           .maybeSingle();
 
         clearTimeout(timeoutId);
-        console.log('[useSubscription] Resultado da query:', { data, error });
 
         if (error) {
-          console.error('[useSubscription] Erro na query:', error);
           setSubscription({
             plan: null,
             isActive: false,
@@ -108,7 +101,6 @@ export const useSubscription = (user: User | null): Subscription => {
         }
 
         if (!data) {
-          console.log('[useSubscription] Nenhuma assinatura ativa encontrada');
           setSubscription({
             plan: null,
             isActive: false,
@@ -118,20 +110,9 @@ export const useSubscription = (user: User | null): Subscription => {
           return;
         }
 
-        // Verificar se está expirada
         const isExpired = data.expires_at ? new Date(data.expires_at) < new Date() : false;
-        console.log('[useSubscription] Dados da assinatura:', {
-          plan_type: data.plan_type,
-          status: data.status,
-          expires_at: data.expires_at,
-          isExpired
-        });
-        
-        // Se o status é 'active' e não expirou, então está ativa
         const isActive = data.status === 'active' && !isExpired;
         const plan: PlanType = isActive ? (data.plan_type as PlanType) : null;
-
-        console.log('[useSubscription] Estado final:', { plan, isActive });
 
         setSubscription({
           plan,
@@ -141,7 +122,6 @@ export const useSubscription = (user: User | null): Subscription => {
         });
       } catch (err) {
         clearTimeout(timeoutId);
-        console.error('[useSubscription] Erro ao buscar assinatura:', err);
         setSubscription({
           plan: null,
           isActive: false,

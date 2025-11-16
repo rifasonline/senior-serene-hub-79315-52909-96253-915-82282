@@ -4,10 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { useSubscription } from '@/hooks/useSubscription';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { User } from '@supabase/supabase-js';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface EmergencyService {
   name: string;
@@ -21,12 +20,8 @@ const EMERGENCY_SERVICES: EmergencyService[] = [
   { name: 'Polícia', number: '190', icon: '🚓' },
 ];
 
-interface EmergencyButtonProps {
-  user: User | null;
-}
-
-export const EmergencyButton = ({ user }: EmergencyButtonProps) => {
-  const subscription = useSubscription(user);
+export const EmergencyButton = () => {
+  const { user, subscription } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [showCallDialog, setShowCallDialog] = useState(false);
   const [selectedService, setSelectedService] = useState<EmergencyService | null>(null);
