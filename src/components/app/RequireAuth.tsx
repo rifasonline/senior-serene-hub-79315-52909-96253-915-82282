@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { Loader2 } from 'lucide-react';
+import { useSubscription } from '@/hooks/useSubscription';
 
 interface RequireAuthProps {
   children: ReactNode;
@@ -11,6 +12,7 @@ interface RequireAuthProps {
 export const RequireAuth = ({ children }: RequireAuthProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const subscription = useSubscription(user);
 
   useEffect(() => {
     // Check current session
@@ -30,7 +32,7 @@ export const RequireAuth = ({ children }: RequireAuthProps) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (loading) {
+  if (loading || subscription.loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="flex flex-col items-center gap-4">
@@ -43,6 +45,10 @@ export const RequireAuth = ({ children }: RequireAuthProps) => {
 
   if (!user) {
     return <Navigate to="/auth" replace />;
+  }
+
+  if (!subscription.isActive) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
