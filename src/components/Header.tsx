@@ -1,34 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { User } from "@supabase/supabase-js";
 import logo from "@/assets/logo-main.png";
-import { useSubscription } from "@/hooks/useSubscription";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const subscription = useSubscription(user);
-
-  useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const { user, subscription, signOut } = useAuth();
 
   const navItems = [
     { name: "Início", path: "/" },
@@ -60,20 +41,8 @@ const Header = () => {
   };
 
   const handleSignOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Error signing out:", error);
-      }
-      // Clear local storage
-      localStorage.clear();
-      // Navigate to home
-      navigate("/");
-    } catch (error) {
-      console.error("Unexpected error during sign out:", error);
-      // Navigate to home anyway
-      navigate("/");
-    }
+    await signOut();
+    navigate("/");
   };
 
   return (
