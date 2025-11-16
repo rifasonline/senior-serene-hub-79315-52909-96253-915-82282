@@ -119,14 +119,16 @@ const Header = () => {
                 <span className="text-sm text-muted-foreground">
                   Olá, {user.email}
                 </span>
-                <Button 
-                  variant="default" 
-                  size="lg"
-                  onClick={() => navigate("/app/dashboard")}
-                >
-                  <LayoutDashboard className="w-4 h-4 mr-2" />
-                  Dashboard
-                </Button>
+                {subscription.isActive && (
+                  <Button 
+                    variant="default" 
+                    size="lg"
+                    onClick={() => navigate("/app/dashboard")}
+                  >
+                    <LayoutDashboard className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Button>
+                )}
                 <Button 
                   variant="outline" 
                   size="lg"
@@ -216,18 +218,20 @@ const Header = () => {
                     <div className="px-4 py-2 text-sm text-muted-foreground">
                       {user.email}
                     </div>
-                    <Button 
-                      variant="default" 
-                      size="lg" 
-                      className="w-full"
-                      onClick={() => {
-                        navigate("/app/dashboard");
-                        setIsOpen(false);
-                      }}
-                    >
-                      <LayoutDashboard className="w-4 w-4 mr-2" />
-                      Dashboard
-                    </Button>
+                    {subscription.isActive && (
+                      <Button 
+                        variant="default" 
+                        size="lg" 
+                        className="w-full"
+                        onClick={() => {
+                          navigate("/app/dashboard");
+                          setIsOpen(false);
+                        }}
+                      >
+                        <LayoutDashboard className="w-4 w-4 mr-2" />
+                        Dashboard
+                      </Button>
+                    )}
                     <Button 
                       variant="outline" 
                       size="lg" 
