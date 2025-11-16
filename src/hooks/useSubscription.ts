@@ -71,6 +71,9 @@ export const useSubscription = (user: User | null): Subscription => {
     const fetchSubscription = async () => {
       console.log('[useSubscription] Buscando assinatura para user:', user.id);
       
+      // Garantir que está em loading enquanto busca
+      setSubscription(prev => ({ ...prev, loading: true }));
+      
       // Timeout de segurança
       const timeoutId = setTimeout(() => {
         console.warn('[useSubscription] Timeout atingido (5s), forçando loading = false');
