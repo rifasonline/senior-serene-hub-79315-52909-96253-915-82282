@@ -32,7 +32,16 @@ export const RequireAuth = ({ children }: RequireAuthProps) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  console.log('[RequireAuth] Estado atual:', {
+    loading,
+    subscriptionLoading: subscription.loading,
+    user: user?.email,
+    subscriptionIsActive: subscription.isActive,
+    subscriptionPlan: subscription.plan
+  });
+
   if (loading || subscription.loading) {
+    console.log('[RequireAuth] Aguardando carregamento...');
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="flex flex-col items-center gap-4">
@@ -44,12 +53,16 @@ export const RequireAuth = ({ children }: RequireAuthProps) => {
   }
 
   if (!user) {
+    console.log('[RequireAuth] Usuário não autenticado, redirecionando para /auth');
     return <Navigate to="/auth" replace />;
   }
 
   if (!subscription.isActive) {
+    console.log('[RequireAuth] Assinatura não ativa, redirecionando para /');
     return <Navigate to="/" replace />;
   }
+
+  console.log('[RequireAuth] Acesso autorizado ao dashboard');
 
   return <>{children}</>;
 };

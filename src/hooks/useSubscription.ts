@@ -93,8 +93,8 @@ export const useSubscription = (user: User | null): Subscription => {
         clearTimeout(timeoutId);
         console.log('[useSubscription] Resultado da query:', { data, error });
 
-        if (error || !data) {
-          console.log('[useSubscription] Sem assinatura ativa:', error?.message || 'Nenhum dado encontrado');
+        if (error) {
+          console.error('[useSubscription] Erro na query:', error);
           setSubscription({
             plan: null,
             isActive: false,
@@ -104,11 +104,31 @@ export const useSubscription = (user: User | null): Subscription => {
           return;
         }
 
-        const isExpired = data.expires_at && new Date(data.expires_at) < new Date();
-        const isActive = data.status === 'active' && !isExpired;
-        const plan = isActive ? data.plan_type : null;
+        if (!data) {
+          console.log('[useSubscription] Nenhuma assinatura ativa encontrada');
+          setSubscription({
+            plan: null,
+            isActive: false,
+            features: getFeatures(null),
+            loading: false,
+          });
+          return;
+        }
 
-        console.log('[useSubscription] Estado final:', { plan, isActive, isExpired, status: data.status });
+        // Verificar se está expirada
+        const isExpired = data.expires_at ? new Date(data.expires_at) < new Date() : false;
+        console.log('[useSubscription] Dados da assinatura:', {
+          plan_type: data.plan_type,
+          status: data.status,
+          expires_at: data.expires_at,
+          isExpired
+        });
+        
+        // Se o status é 'active' e não expirou, então está ativa
+        const isActive = data.status === 'active' && !isExpired;
+        const plan: PlanType = isActive ? (data.plan_type as PlanType) : null;
+
+        console.log('[useSubscription] Estado final:', { plan, isActive });
 
         setSubscription({
           plan,
