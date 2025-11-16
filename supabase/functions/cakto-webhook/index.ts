@@ -88,12 +88,11 @@ serve(async (req) => {
     let subscriptionStatus: 'active' | 'cancelled' | 'expired' = 'active';
     let planType: 'basic' | 'pro' = 'basic';
     let isRefundOrCancellation = false;
+    let expiresAt: string | null = null;
 
     switch (event) {
       case 'purchase_approved':
       case 'pix_paid':
-      case 'subscription.created':
-      case 'subscription.updated':
       case 'payment.approved':
         subscriptionStatus = 'active';
         // Mapear produto/oferta da Cakto para plano
@@ -107,21 +106,49 @@ serve(async (req) => {
           planType = 'basic';
         }
         
-        console.log(`Plano identificado: ${planType} para produto "${data.product?.name}"`);
+        // Para compras únicas, definir expiração de 30 dias
+        // Para subscriptions recorrentes, o Cakto envia eventos de renovação
+        const thirtyDaysFromNow = new Date();
+        thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+        expiresAt = thirtyDaysFromNow.toISOString();
+        
+        console.log(`Plano identificado: ${planType} para produto "${data.product?.name}", expira em: ${expiresAt}`);
+        break;
+      
+      case 'subscription.created':
+      case 'subscription.updated':
+        subscriptionStatus = 'active';
+        const subProductName = data.product?.name?.toLowerCase() || '';
+        const subOfferName = data.offer?.name?.toLowerCase() || '';
+        
+        if (subProductName.includes('pro') || subOfferName.includes('pro')) {
+          planType = 'pro';
+        } else {
+          planType = 'basic';
+        }
+        
+        // Subscriptions recorrentes têm renovação automática, não precisam de expires_at
+        expiresAt = null;
+        console.log(`Subscription recorrente ${planType} criada/atualizada para ${customerEmail}`);
         break;
       
       case 'subscription.cancelled':
       case 'purchase_refunded':
       case 'refund.created':
       case 'charge_refunded':
-        console.log(`Processando reembolso/cancelamento para usuário: ${customerEmail}`);
+      case 'payment.failed':
+      case 'subscription.payment_failed':
+        console.log(`Processando reembolso/cancelamento/falha de pagamento para usuário: ${customerEmail}`);
         subscriptionStatus = 'cancelled';
         isRefundOrCancellation = true;
+        // Marcar como expirado imediatamente
+        expiresAt = new Date().toISOString();
         break;
       
       case 'subscription.expired':
         subscriptionStatus = 'expired';
         isRefundOrCancellation = true;
+        expiresAt = new Date().toISOString();
         break;
       
       default:
@@ -160,12 +187,12 @@ serve(async (req) => {
       // Se for reembolso/cancelamento, manter o plano atual e não sobrescrever
       if (isRefundOrCancellation) {
         console.log(`Removendo acesso - Status: ${subscriptionStatus}, Plano: ${existingSubscription.plan_type}`);
-        updateData.expires_at = new Date().toISOString(); // Marca como expirada
+        updateData.expires_at = expiresAt; // Marca como expirada imediatamente
       } else {
-        // Para ativações, atualizar o plano
+        // Para ativações, atualizar o plano e data de expiração
         updateData.plan_type = planType;
         updateData.stripe_subscription_id = data.id || existingSubscription.stripe_subscription_id;
-        updateData.expires_at = null;
+        updateData.expires_at = expiresAt;
       }
 
       const { data: updated, error: updateError } = await supabase
@@ -202,7 +229,7 @@ serve(async (req) => {
           plan_type: planType,
           status: subscriptionStatus,
           stripe_subscription_id: data.id,
-          expires_at: null,
+          expires_at: expiresAt,
           started_at: new Date().toISOString()
         })
         .select()
