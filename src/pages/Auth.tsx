@@ -63,7 +63,7 @@ const Auth = () => {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/app/dashboard`,
+        emailRedirectTo: `${window.location.origin}/`,
         data: {
           full_name: fullName,
           phone: cleanPhone,
@@ -130,7 +130,7 @@ const Auth = () => {
       description: "Bem-vindo de volta!",
     });
     
-    navigate("/app/dashboard", { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (
